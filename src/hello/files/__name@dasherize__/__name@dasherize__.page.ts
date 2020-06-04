@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 
-import { <%= classify(name)%> } from '../model/<%= dasherize(name)%>.model';
+import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
 import { LoadFirestoreDataService } from '../afmodule/load-firestore-data.service';
 
 import { getNewSeqNo } from '../utilities/getNewSeqNo';
 import { FirestoreCrudService } from '../afmodule/firestore-crud.service';
-import { InteractionService } from '../services/interaction.service';
+import { <%= classify(name)%>Service } from './<%= dasherize(name)%>.service';
 
 declare type T = <%= classify(name)%>;
 @Component({
@@ -19,34 +19,34 @@ export class <%= classify(name)%>Page implements OnInit, OnDestroy {
   addingNew$: Observable<boolean>;
   pageTitle = '<%= classify(name)%>';
   list: T[];
-  itemType = '<%= dasherize(name)%>';
+  itemType = '<%= camelize(name)%>';
   firebaseCollectionName = this.itemType + 'List';
 
   constructor(
-    private service: InteractionService,
+    private service: <%= classify(name)%>Service,
     private dataService: LoadFirestoreDataService,
     private crud: FirestoreCrudService
   ) {}
 
   ngOnInit() {
-    this.dataSub = this.dataService.<%= dasherize(name)%>List$.subscribe(list => {
+    this.dataSub = this.dataService.<%= camelize(name)%>List$.subscribe(list => {
       this.list = list;
     });
-    this.addingNew$ = this.service.addingNewSummary$;
+    this.addingNew$ = this.service.addingNew<%= classify(name)%>$;
   }
 
   startAddingNew() {
-    this.service.isAddingNew(this.itemType, true);
+    this.service.isAddingNew(true);
   }
 
   onAdd(item: T) {
     const newItem = { ...item, seqNo: this.list[this.list.length - 1].seqNo + 1 };
     this.crud.addItem<T>(this.firebaseCollectionName, newItem);
-    this.service.isAddingNew(this.itemType, false);
+    this.service.isAddingNew(false);
   }
 
   onCancelAdd() {
-    this.service.isAddingNew(this.itemType, false);
+    this.service.isAddingNew(false);
   }
 
   doReorder(event: any) {

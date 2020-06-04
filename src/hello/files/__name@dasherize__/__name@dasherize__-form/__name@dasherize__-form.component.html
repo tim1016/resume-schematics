@@ -10,7 +10,7 @@
 
   <app-actions
     slot="end"
-    [itemType]="'<%= dasherize(name)%>'"
+    [itemType]="'<%= camelize(name)%>'"
     [actionMode]="'answer'"
     [formMode]="formMode"
     (saveSummary)="submitForm()"

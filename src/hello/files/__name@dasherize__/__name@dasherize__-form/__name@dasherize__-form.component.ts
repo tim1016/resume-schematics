@@ -3,7 +3,7 @@ import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { rxFormConfig } from '../../utilities/rxFormValidation';
 
-import { <%= classify(name)%> } from 'src/app/model/<%= dasherize(name)%>.model';
+import { <%= classify(name)%> } from 'src/app/<%= dasherize(name)%>/<%= dasherize(name)%>.model';
 
 @Component({
   selector: 'app-<%= dasherize(name)%>-form',
@@ -31,10 +31,10 @@ export class <%= classify(name)%>FormComponent implements OnInit {
 
   initRxForm(title: string = '', text: string = '') {
     rxFormConfig();
-    let <%= dasherize(name)%> = new <%= classify(name)%>();
-    <%= dasherize(name)%>.title = title;
-    <%= dasherize(name)%>.text = text;
-    this.form = this.rxFormBuilder.formGroup(<%= dasherize(name)%>);
+    let new<%= classify(name)%> = new <%= classify(name)%>();
+    new<%= classify(name)%>.title = title;
+    new<%= classify(name)%>.text = text;
+    this.form = this.rxFormBuilder.formGroup(new<%= classify(name)%>);
   }
 
   submitForm() {

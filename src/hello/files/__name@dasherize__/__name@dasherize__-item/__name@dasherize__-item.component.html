@@ -19,22 +19,22 @@
       <app-actions
         *ngIf="(editIndex$ | async) === -1"
         slot="end"
-        [itemType]="'summary'"
+        [itemType]="'<%= camelize(name)%>'"
         [actionMode]="'question'"
         [formMode]="'edit'"
-        (deleteSummary)="onDelete()"
-        (editSummary)="onStartEdit(itemIndex)"
+        (delete<%= classify(name) %>)="onDelete()"
+        (edit<%= classify(name) %>)="onStartEdit(itemIndex)"
       ></app-actions>
     </ion-toolbar>
   </ion-footer>
 </ion-card>
 
 <ion-card *ngIf="(editIndex$ | async) === itemIndex">
-  <app-summary-form
+  <app-<%= dasherize(name)%>-form
     [formMode]="'edit'"
     [actionMode]="'answer'"
     [item]="item"
     (editSuccessful)="onEdit($event)"
     (editCancelled)="onCancelEdit()"
-  ></app-summary-form>
+  ></app-<%= dasherize(name)%>-form>
 </ion-card>
