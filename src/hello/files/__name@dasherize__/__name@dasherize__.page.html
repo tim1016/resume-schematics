@@ -11,12 +11,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-md="10" offset-md="1" size-xl="8" offset-xl="2">
-	              <ion-item *ngIf="length === 0" lines="none">
-          <ion-thumbnail slot="start">
-            <img src="../../assets/error.svg" />
-          </ion-thumbnail>
-          <p>You have not created any {{pageTitle}} items yet. Please create a new {{pageTitle}}</p>
-        </ion-item>
+        <app-no-item *ngIf="length === 0 && !addingNew" [pageTitle]="pageTitle"></app-no-item>
         <div style="display: flex; justify-content: center;" *ngIf="!addingNew">
           <ion-button class="ion-margin-horizontal" color="primary" (click)="startAddingNew()">
             <ion-icon slot="start" name="add-outline" fill="clear"></ion-icon> Add New
