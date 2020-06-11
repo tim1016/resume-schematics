@@ -16,9 +16,12 @@ declare type T = <%= classify(name)%>;
 })
 export class <%= classify(name)%>Page implements OnInit, OnDestroy {
   dataSub: Subscription;
+  uiChanges: Subscription;
   addingNew$: Observable<boolean>;
-  pageTitle = '<%= classify(name)%>';
+  pageTitle : string;
   list: T[];
+  addingNew = false;
+  length = 0;
   itemType = '<%= camelize(name)%>';
   firebaseCollectionName = this.itemType + 'List';
 
@@ -30,9 +33,14 @@ export class <%= classify(name)%>Page implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dataSub = this.dataService.<%= camelize(name)%>List$.subscribe(list => {
-      this.list = list;
+	  this.list = list;
+	  this.length = list.length;
     });
     this.addingNew$ = this.service.addingNew<%= classify(name)%>$;
+    this.pageTitle = this.service.pageTitle;
+    this.uiChanges = this.addingNew$.subscribe(val => {
+      this.addingNew = val;
+    });
   }
 
   startAddingNew() {
@@ -40,7 +48,11 @@ export class <%= classify(name)%>Page implements OnInit, OnDestroy {
   }
 
   onAdd(item: T) {
-    const newItem = { ...item, seqNo: this.list[this.list.length - 1].seqNo + 1 };
+    let newSeqNo = 1;
+    if (this.list.length > 0) {
+      newSeqNo = this.list[this.list.length - 1].seqNo + 1;
+    }
+    const newItem = { ...item, seqNo: newSeqNo };
     this.crud.addItem<T>(this.firebaseCollectionName, newItem);
     this.service.isAddingNew(false);
   }
@@ -59,5 +71,6 @@ export class <%= classify(name)%>Page implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.dataSub) this.dataSub.unsubscribe;
+    if (this.uiChanges) this.uiChanges.unsubscribe;
   }
 }

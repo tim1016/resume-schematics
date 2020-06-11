@@ -7,13 +7,15 @@
     [form]="form"
     [ionInputMode]="'text'"
   ></app-form-input>
-
-  <app-actions
-    slot="end"
-    [itemType]="'<%= camelize(name)%>'"
-    [actionMode]="'answer'"
-    [formMode]="formMode"
-    (saveSummary)="submitForm()"
-    (cancelSummary)="onCancel()"
-  ></app-actions>
+  <div class="center-action-buttons ion-padding-top ion-margin-top">
+    <app-actions
+      slot="end"
+      [itemType]="'<%= camelize(name)%>'"
+      [actionMode]="'answer'"
+      [formMode]="formMode"
+      (save<%= classify(name) %>)="submitForm()" 
+      (cancel<%= classify(name) %>)="onCancel()" 
+      (deleteSummary)="onDelete()">
+    </app-actions>
+  </div>
 </form>

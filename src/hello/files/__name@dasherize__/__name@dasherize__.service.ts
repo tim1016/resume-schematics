@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class <%= classify(name)%>Service {
   addingNew<%= classify(name)%>$ = new BehaviorSubject<boolean>(false);
   editIndex<%= classify(name)%>$ = new BehaviorSubject<number>(-1);
-
+  pageTitle = <%= classify(name)%>;
   constructor() {}
 
   isAddingNew(operation: boolean): void {

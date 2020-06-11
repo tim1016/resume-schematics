@@ -21,8 +21,7 @@
         slot="end"
         [itemType]="'<%= camelize(name)%>'"
         [actionMode]="'question'"
-        [formMode]="'edit'"
-        (delete<%= classify(name) %>)="onDelete()"
+        [formMode]="'edit'"        
         (edit<%= classify(name) %>)="onStartEdit(itemIndex)"
       ></app-actions>
     </ion-toolbar>
@@ -36,5 +35,6 @@
     [item]="item"
     (editSuccessful)="onEdit($event)"
     (editCancelled)="onCancelEdit()"
+    (delete)="onDelete()"
   ></app-<%= dasherize(name)%>-form>
 </ion-card>

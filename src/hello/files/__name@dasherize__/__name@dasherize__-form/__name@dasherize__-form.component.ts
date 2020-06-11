@@ -19,13 +19,16 @@ export class <%= classify(name)%>FormComponent implements OnInit {
   @Output() editCancelled = new EventEmitter<boolean>();
   @Output() addSuccessful = new EventEmitter<<%= classify(name)%>>();
   @Output() addCancelled = new EventEmitter<boolean>();
+  @Output() delete = new EventEmitter<void>();
 
   form: FormGroup;
+  pageTitle: string;
   @ViewChild('formRef') formRef: FormGroupDirective;
 
-  constructor(private rxFormBuilder: RxFormBuilder) {}
+  constructor(private rxFormBuilder: RxFormBuilder, private service: <%= classify(name)%>Service) {}
 
   ngOnInit() {
+    this.pageTitle = this.service.pageTitle;
     this.initRxForm(this.item?.title, this.item?.text);
   }
 
@@ -56,6 +59,11 @@ export class <%= classify(name)%>FormComponent implements OnInit {
     } else {
       console.log('form was not valid');
     }
+  }
+
+  onDelete() {
+    this.form.reset();
+    this.delete.emit();
   }
 
   onCancel() {
