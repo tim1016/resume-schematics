@@ -1,28 +1,17 @@
-# Getting Started With Schematics
+###Build and publish custom schematics
+This project uses Tomas Trajan's blog post on Medium
+## dev mode
+npm run build:watch
 
-This repository is a basic Schematic implementation that serves as a starting point to create and publish Schematics to NPM.
-
-### Testing
-
-To test locally, install `@angular-devkit/schematics-cli` globally and use the `schematics` command line tool. That tool acts the same as the `generate` command of the Angular CLI, but also has a debug mode.
-
-Check the documentation with
-```bash
-schematics --help
-```
-
-### Unit Testing
-
-`npm run test` will run the unit tests, using Jasmine as a runner and test framework.
-
-### Publishing
-
-To publish, simply do:
-
-```bash
+### prod mode 
 npm run build
-npm publish
-```
 
-That's it!
- # resume-schematics
+### pack
+npm pack will give hello-1.0.0.tgz file which we can copy to Angular CLI workspace project.
+
+### install in angular project 
+In the target Angular CLI workspace, run npm i --no-save schematics-hello-1.0.0-tgz 
+
+### To create schematic
+ng g hello:hello 'feature/college'
+

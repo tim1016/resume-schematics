@@ -12,12 +12,12 @@ import {
 
 import { buildDefaultPath } from '@schematics/angular/utility/project';
 import { parseName } from '@schematics/angular/utility/parse-name';
-import { Schema } from './schema';
+// import { Schema } from './schema';
 import { strings } from '@angular-devkit/core';
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
-export function hello(_options: Schema): Rule {
+export function hello(_options: any): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const workspaceConfigBuffer = tree.read('angular.json');
     if (!workspaceConfigBuffer) {
