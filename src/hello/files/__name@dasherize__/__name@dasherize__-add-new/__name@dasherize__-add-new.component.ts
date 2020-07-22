@@ -6,9 +6,9 @@ import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
 declare type T = <%= classify(name)%>;
 
 @Component({
-  selector: 'app-summary-add-new',
-  templateUrl: './summary-add-new.component.html',
-  styleUrls: ['./summary-add-new.component.scss'],
+  selector: 'app-<%= dasherize(name)%>-add-new',
+  templateUrl: './<%= dasherize(name)%>-add-new.component.html',
+  styleUrls: ['./<%= dasherize(name)%>-add-new.component.scss'],
 })
 export class <%= classify(name)%>AddNewComponent implements OnInit {
   @Input() list: T[];
