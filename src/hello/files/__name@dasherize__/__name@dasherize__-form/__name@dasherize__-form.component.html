@@ -1,3 +1,8 @@
+<div class="ion-text-center ion-text-uppercase">
+  <h2 class="line-across ion-margin-bottom">
+    <span> {{ formMode === 'new' ? 'Add New' : 'Edit' }} {{ pageTitle }} </span>
+  </h2>
+</div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()" #formRef="ngForm">
   <app-form-input [label]="'Title'" [controlName]="'title'" [form]="form"></app-form-input>
   <app-form-input
@@ -15,7 +20,7 @@
       [formMode]="formMode"
       (save<%= classify(name) %>)="submitForm()" 
       (cancel<%= classify(name) %>)="onCancel()" 
-      (deleteSummary)="onDelete()">
-    </app-actions>
+      (deleteSummary)="onDelete()"
+     ></app-actions>
   </div>
 </form>

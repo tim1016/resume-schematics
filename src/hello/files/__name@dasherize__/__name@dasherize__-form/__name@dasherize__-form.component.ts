@@ -34,10 +34,10 @@ export class <%= classify(name)%>FormComponent implements OnInit {
 
   initRxForm(title: string = '', text: string = '') {
     rxFormConfig();
-    let new<%= classify(name)%> = new <%= classify(name)%>();
-    new<%= classify(name)%>.title = title;
-    new<%= classify(name)%>.text = text;
-    this.form = this.rxFormBuilder.formGroup(new<%= classify(name)%>);
+    let <%= classify(name)%> = new <%= classify(name)%>();
+    <%= classify(name)%>.title = title;
+    <%= classify(name)%>.text = text;
+    this.form = this.rxFormBuilder.formGroup(<%= classify(name)%>);
   }
 
   submitForm() {
