@@ -12,6 +12,7 @@
     <ion-row>
       <ion-col size="12" size-md="10" offset-md="1" size-xl="8" offset-xl="2">
         <app-no-item *ngIf="length === 0 && !addingNew" [pageTitle]="pageTitle"></app-no-item>
+
         <div style="display: flex; justify-content: center;" *ngIf="!addingNew">
           <ion-button class="ion-margin-horizontal" color="primary" (click)="startAddingNew()">
             <ion-icon slot="start" name="add-outline" fill="clear"></ion-icon> Add New
@@ -19,12 +20,9 @@
         </div>
 
         <div *ngIf="addingNew">
-          <app-<%= dasherize(name)%>-form
-            [formMode]="'new'"
-            (addSuccessful)="onAdd($event)"
-            (addCancelled)="onCancelAdd()"
-          ></app-<%= dasherize(name)%>-form>
+          <app-<%= dasherize(name)%>-add-new [list]="list"></app-<%= dasherize(name)%>-add-new>
         </div>
+        
         <div *ngIf="!addingNew">
           <ion-reorder-group (ionItemReorder)="doReorder($event)" disabled="false">
             <div *ngFor="let item of list; let i = index">

@@ -11,10 +11,10 @@ import { <%= classify(name)%>Service } from './<%= dasherize(name)%>.service';
 declare type T = <%= classify(name)%>;
 @Component({
   selector: 'app-<%= dasherize(name)%>',
-  templateUrl: './<%= dasherize(name)%>.page.html',
-  styleUrls: ['./<%= dasherize(name)%>.page.scss'],
+  templateUrl: './<%= dasherize(name)%>.component.html',
+  styleUrls: ['./<%= dasherize(name)%>.component.scss'],
 })
-export class <%= classify(name)%>Page implements OnInit, OnDestroy {
+export class <%= classify(name)%>Component implements OnInit, OnDestroy {
   dataSub: Subscription;
   uiChanges: Subscription;
   addingNew$: Observable<boolean>;
