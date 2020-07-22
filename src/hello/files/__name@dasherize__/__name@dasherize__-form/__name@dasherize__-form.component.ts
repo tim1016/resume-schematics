@@ -4,6 +4,7 @@ import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { rxFormConfig } from '../../utilities/rxFormValidation';
 
 import { <%= classify(name)%> } from 'src/app/<%= dasherize(name)%>/<%= dasherize(name)%>.model';
+import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 
 @Component({
   selector: 'app-<%= dasherize(name)%>-form',
@@ -34,10 +35,10 @@ export class <%= classify(name)%>FormComponent implements OnInit {
 
   initRxForm(title: string = '', text: string = '') {
     rxFormConfig();
-    let <%= classify(name)%> = new <%= classify(name)%>();
-    <%= classify(name)%>.title = title;
-    <%= classify(name)%>.text = text;
-    this.form = this.rxFormBuilder.formGroup(<%= classify(name)%>);
+    let new<%= classify(name)%> = new <%= classify(name)%>();
+    new<%= classify(name)%>.title = title;
+    new<%= classify(name)%>.text = text;
+    this.form = this.rxFormBuilder.formGroup(new<%= classify(name)%>);
   }
 
   submitForm() {
