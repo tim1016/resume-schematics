@@ -1,20 +1,20 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FirestoreCrudService } from 'src/app/afmodule/firestore-crud.service';
-import { SummaryService } from '../summary.service';
-import { Summary } from '../summary.model';
+import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
+import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
 
-declare type T = Summary;
+declare type T = <%= classify(name)%>;
 
 @Component({
   selector: 'app-summary-add-new',
   templateUrl: './summary-add-new.component.html',
   styleUrls: ['./summary-add-new.component.scss'],
 })
-export class SummaryAddNewComponent implements OnInit {
+export class <%= classify(name)%>AddNewComponent implements OnInit {
   @Input() list: T[];
-  itemType = 'summary';
+  itemType = '<%= camelize(name)%>';
   firebaseCollectionName = this.itemType + 'List';
-  constructor(private service: SummaryService, private crud: FirestoreCrudService) {}
+  constructor(private service: <%= classify(name)%>Service, private crud: FirestoreCrudService) {}
 
   ngOnInit() {}
 
