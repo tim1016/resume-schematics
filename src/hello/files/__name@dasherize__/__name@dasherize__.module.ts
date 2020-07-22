@@ -5,10 +5,10 @@ import { IonicModule } from '@ionic/angular';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../shared/shared.module';
-
 import { <%= classify(name)%>Component } from './<%= dasherize(name)%>.component';
 import { <%= classify(name)%>ItemComponent } from './<%= dasherize(name)%>-item/<%= dasherize(name)%>-item.component';
 import { <%= classify(name)%>FormComponent } from './<%= dasherize(name)%>-form/<%= dasherize(name)%>-form.component';
+import { <%= classify(name)%>AddNewComponent } from './<%= dasherize(name)%>-add-new/<%= dasherize(name)%>-add-new.component';
 
 const routes: Routes = [
   {
@@ -19,7 +19,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, RouterModule.forChild(routes),  SharedModule],
-  declarations: [<%= classify(name)%>Component, <%= classify(name)%>ItemComponent, <%= classify(name)%>FormComponent],
+  declarations: [<%= classify(name)%>Component, <%= classify(name)%>ItemComponent, <%= classify(name)%>FormComponent, <%= classify(name)%>AddNewComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class <%= classify(name)%>Module {}

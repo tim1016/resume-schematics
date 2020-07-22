@@ -11,7 +11,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-md="10" offset-md="1" size-xl="8" offset-xl="2">
-        <app-no-item *ngIf="length === 0 && !addingNew" [pageTitle]="pageTitle"></app-no-item>
+        <app-no-item *ngIf="numItems === 0 && !addingNew" [pageTitle]="pageTitle"></app-no-item>
 
         <div style="display: flex; justify-content: center;" *ngIf="!addingNew">
           <ion-button class="ion-margin-horizontal" color="primary" (click)="startAddingNew()">
