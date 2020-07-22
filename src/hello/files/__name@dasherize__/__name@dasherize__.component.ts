@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
-import { LoadFirestoreDataService } from '../afmodule/load-firestore-data.service';
 
 import { getNewSeqNo } from '../utilities/getNewSeqNo';
 import { FirestoreCrudService } from '../afmodule/firestore-crud.service';
@@ -15,30 +14,23 @@ declare type T = <%= classify(name)%>;
   styleUrls: ['./<%= dasherize(name)%>.component.scss'],
 })
 export class <%= classify(name)%>Component implements OnInit, OnDestroy {
-  dataSub: Subscription;
   uiChanges: Subscription;
-  addingNew$: Observable<boolean>;
-  pageTitle : string;
-  list: T[];
   addingNew = false;
-  length = 0;
+  pageTitle: string;
+  list: T[];
+  numItems: number;
   itemType = '<%= camelize(name)%>';
   firebaseCollectionName = this.itemType + 'List';
 
-  constructor(
-    private service: <%= classify(name)%>Service,
-    private dataService: LoadFirestoreDataService,
-    private crud: FirestoreCrudService
-  ) {}
+  constructor(private service: <%= classify(name)%>Service, private crud: FirestoreCrudService) {}
 
   ngOnInit() {
-    this.dataSub = this.dataService.<%= camelize(name)%>List$.subscribe(list => {
-	  this.list = list;
-	  this.length = list.length;
-    });
-    this.addingNew$ = this.service.addingNew<%= classify(name)%>$;
     this.pageTitle = this.service.pageTitle;
-    this.uiChanges = this.addingNew$.subscribe(val => {
+    this.service.list$.subscribe(list => {
+      this.list = list;
+      this.numItems = list.length;
+    });
+    this.uiChanges = this.service.addingNew<%= classify(name)%>$.subscribe(val => {
       this.addingNew = val;
     });
   }
@@ -47,30 +39,16 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
     this.service.isAddingNew(true);
   }
 
-  onAdd(item: T) {
-    let newSeqNo = 1;
-    if (this.list.length > 0) {
-      newSeqNo = this.list[this.list.length - 1].seqNo + 1;
-    }
-    const newItem = { ...item, seqNo: newSeqNo };
-    this.crud.addItem<T>(this.firebaseCollectionName, newItem);
-    this.service.isAddingNew(false);
-  }
-
-  onCancelAdd() {
-    this.service.isAddingNew(false);
-  }
-
   doReorder(event: any) {
-    const newSeqNo = getNewSeqNo<T>(event.detail.from, event.detail.to, this.list.slice());
-    let newItem = this.list[event?.detail?.from];
+    const { from, to } = event.detail;
+    const newSeqNo = getNewSeqNo<T>(from, to, this.list.slice());
+    let newItem = this.list[from];
     newItem = { ...newItem, seqNo: newSeqNo };
     this.crud.updateItem<T>(newItem.id, this.firebaseCollectionName, newItem);
     event.detail.complete();
   }
 
   ngOnDestroy() {
-    if (this.dataSub) this.dataSub.unsubscribe;
     if (this.uiChanges) this.uiChanges.unsubscribe;
   }
 }
