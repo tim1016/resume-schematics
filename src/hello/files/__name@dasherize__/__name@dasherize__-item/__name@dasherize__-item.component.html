@@ -1,8 +1,10 @@
 <ion-card *ngIf="(editIndex$ | async) !== itemIndex">
-  <ion-card-header>
-    <ion-card-title color="primary"> {{ item.title }} - {{ item.seqNo }} </ion-card-title>
-  </ion-card-header>
-  <ion-card-content>{{ item.text }} </ion-card-content>
+  <ion-card-content>
+    <div class="ion-text-uppercase">
+      <h2>{{ item.title }}</h2>
+    </div>
+    {{ item.text }}
+  </ion-card-content>
   <ion-footer *ngIf="(editIndex$ | async) === -1 && (addingNew$ | async) === false">
     <ion-toolbar>
       <ion-reorder>

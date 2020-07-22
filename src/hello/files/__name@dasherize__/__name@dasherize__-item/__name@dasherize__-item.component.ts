@@ -28,6 +28,7 @@ export class <%= classify(name)%>ItemComponent implements OnInit {
 
   onDelete() {
     this.crud.deleteItem<T>(this.firebaseCollectionName, this.item);
+    this.service.setEditIndex(-1);
   }
 
   onStartEdit(index: number) {
