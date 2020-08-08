@@ -20,7 +20,7 @@
       [formMode]="formMode"
       (save<%= classify(name) %>)="submitForm()" 
       (cancel<%= classify(name) %>)="onCancel()" 
-      (deleteSummary)="onDelete()"
+      (delete<%= classify(name) %>)="onDelete()"
      ></app-actions>
   </div>
 </form>

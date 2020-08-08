@@ -24,6 +24,7 @@ export class <%= classify(name)%>FormComponent implements OnInit {
 
   form: FormGroup;
   pageTitle: string;
+  toggleAdvanced = false;
   @ViewChild('formRef') formRef: FormGroupDirective;
 
   constructor(private rxFormBuilder: RxFormBuilder, private service: <%= classify(name)%>Service) {}

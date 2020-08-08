@@ -19,7 +19,7 @@ export class <%= classify(name)%>AddNewComponent implements OnInit {
   ngOnInit() {}
 
   onAdd(item: T) {
-    const newItem = { ...item, seqNo: this.list[this.list.length - 1].seqNo + 1 };
+    const newItem = { ...item, seqNo: (this.list.length > 0 ? this.list[this.list.length - 1].seqNo : 0) + 1 };
     this.crud.addItem<T>(this.firebaseCollectionName, newItem);
     this.service.isAddingNew(false);
   }
