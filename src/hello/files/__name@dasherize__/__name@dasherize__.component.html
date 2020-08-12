@@ -4,6 +4,13 @@
     <ion-buttons slot="start">
       <ion-menu-button menu="sideBarLeft"></ion-menu-button>
     </ion-buttons>
+
+    <ion-buttons slot="end" *ngIf="!addingNew">
+      <ion-button (click)="startAddingNew()" fill="outline">
+        <ion-icon slot="icon-only" name="add-outline" fill="clear"></ion-icon>
+        <span class="hide-small">Add New</span>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -24,9 +31,15 @@
         </div>
         
         <div *ngIf="!addingNew">
+          <ion-searchbar
+          placeholder="Focus area"
+          [(ngModel)]="filteredFocus"
+        ></ion-searchbar>
           <ion-reorder-group (ionItemReorder)="doReorder($event)" disabled="false">
             <div *ngFor="let item of list; let i = index">
-              <app-<%= dasherize(name)%>-item [item]="item" [itemIndex]="i"></app-<%= dasherize(name)%>-item>
+              <ng-container *ngIf="includesFilter(item)">
+                <app-<%= dasherize(name)%>-item [item]="item" [itemIndex]="i"></app-<%= dasherize(name)%>-item>
+              </ng-container>
             </div>
           </ion-reorder-group>
       </div>
