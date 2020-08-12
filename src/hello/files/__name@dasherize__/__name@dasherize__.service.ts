@@ -15,7 +15,10 @@ export class <%= classify(name)%>Service {
   length = 0;
   dataSub: Subscription;
 
-  constructor(private dataService: LoadFirestoreDataService, private crud: FirestoreCrudService) {
+  constructor(
+    private dataService: LoadFirestoreDataService,
+    private crud: FirestoreCrudService
+  ) {
     this.list$ = this.dataService.<%= camelize(name)%>List$;
   }
 

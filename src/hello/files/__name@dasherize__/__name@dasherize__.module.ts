@@ -27,16 +27,15 @@ const components = [
 
 
 @NgModule({
-  @NgModule({
-    imports: [
-      CommonModule,
-      FormsModule,
-      ReactiveFormsModule,
-      IonicModule,
-      RouterModule.forChild(routes),
-      SharedModule,
-      FocusModule,
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    FocusModule,
+  ],
   declarations: [...components],
   exports: [...components],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
