@@ -21,8 +21,12 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
   numItems: number;
   itemType = '<%= camelize(name)%>';
   firebaseCollectionName = this.itemType + 'List';
+  filteredFocus = '';
 
-  constructor(private service: <%= classify(name)%>Service, private crud: FirestoreCrudService) {}
+  constructor(
+    private service: <%= classify(name)%>Service, 
+    private crud: FirestoreCrudService
+    ) {}
 
   ngOnInit() {
     this.pageTitle = this.service.pageTitle;
