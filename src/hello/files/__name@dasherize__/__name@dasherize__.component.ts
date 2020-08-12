@@ -52,6 +52,16 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
     event.detail.complete();
   }
 
+  includesFilter(item: T) {
+    if (this.filteredFocus.trim() == '') return true;
+    let include = false;
+    for (const focus of item.focus) {
+      if (focus.name.toLowerCase().includes(this.filteredFocus.toLowerCase()))
+        include = true;
+    }
+    return include;
+  }
+
   ngOnDestroy() {
     if (this.uiChanges) this.uiChanges.unsubscribe;
   }
