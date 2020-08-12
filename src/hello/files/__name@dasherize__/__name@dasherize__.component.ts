@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
-
 import { getNewSeqNo } from '../utilities/getNewSeqNo';
 import { FirestoreCrudService } from '../afmodule/firestore-crud.service';
 import { <%= classify(name)%>Service } from './<%= dasherize(name)%>.service';

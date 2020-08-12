@@ -14,12 +14,16 @@ export class <%= classify(name)%>AddNewComponent implements OnInit {
   @Input() list: T[];
   itemType = '<%= camelize(name)%>';
   firebaseCollectionName = this.itemType + 'List';
-  constructor(private service: <%= classify(name)%>Service, private crud: FirestoreCrudService) {}
+  
+  constructor(
+    private service: <%= classify(name)%>Service, 
+    private crud: FirestoreCrudService
+  ) {}
 
   ngOnInit() {}
 
   onAdd(item: T) {
-    const newItem = { ...item, seqNo: (this.list.length > 0 ? this.list[this.list.length - 1].seqNo : 0) + 1 };
+    const newItem = { ...item, seqNo: getSeqNo(this.list) };
     this.crud.addItem<T>(this.firebaseCollectionName, newItem);
     this.service.isAddingNew(false);
   }

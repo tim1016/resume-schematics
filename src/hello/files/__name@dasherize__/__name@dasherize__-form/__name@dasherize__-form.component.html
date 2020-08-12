@@ -3,8 +3,18 @@
     <span> {{ formMode === 'new' ? 'Add New' : 'Edit' }} {{ pageTitle }} </span>
   </h2>
 </div>
+
+<app-selected-focus
+  [currentFocusRefList]="focusRefList"
+  (focusSelectionEvent)="updateFocus($event)"
+></app-selected-focus>
+
 <form [formGroup]="form" (ngSubmit)="onSubmit()" #formRef="ngForm">
-  <app-form-input [label]="'Title'" [controlName]="'title'" [form]="form"></app-form-input>
+  <app-form-input
+    [label]="'Title'"
+    [controlName]="'title'"
+    [form]="form"
+  ></app-form-input>
   <app-form-input
     [inputType]="'textarea'"
     [label]="'Description'"
@@ -12,7 +22,8 @@
     [form]="form"
     [ionInputMode]="'text'"
   ></app-form-input>
-  <div class="center-action-buttons ion-padding-top ion-margin-top">
+  <div class="answer-action-buttons">
+    <!-- prettier-ignore -->
     <app-actions
       slot="end"
       [itemType]="'<%= camelize(name)%>'"
@@ -20,7 +31,7 @@
       [formMode]="formMode"
       (save<%= classify(name) %>)="submitForm()" 
       (cancel<%= classify(name) %>)="onCancel()" 
-      (delete<%= classify(name) %>)="onDelete()"
-     ></app-actions>
+      (delete<%= classify(name) %>)="onDelete()" 
+    ></app-actions>
   </div>
 </form>
