@@ -25,7 +25,6 @@ const components = [
   <%= classify(name)%>AddNewComponent,
 ];
 
-
 @NgModule({
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import { required } from '@rxweb/reactive-form-validators';
+import { required, prop } from '@rxweb/reactive-form-validators';
 import { DocumentReference } from '@angular/fire/firestore';
 import { Focus } from '../focus/focus.model';
 
