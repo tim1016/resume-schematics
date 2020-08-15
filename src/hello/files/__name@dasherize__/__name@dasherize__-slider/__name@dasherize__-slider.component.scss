@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+ion-slides {
+  --bullet-background: var(--ion-color-dark);
+  // display: flex;
+}
+
+.slider-title {
+  background-color: var(--ion-color-dark);
+  color: var(--ion-color-dark-contrast);
+  padding: 0.5rem;
+  & h2 {
+    line-height: 1;
+    margin: 0;
+  }
+}
+
+.slider-transition {
+  display: flex;
+  justify-content: center;
+}
+
+.slider-selections {
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+}
+
+.num-selected-badge {
+  margin-left: 5px;
+}
+
+.slider-add-button {
+  justify-self: flex-end;
+}
+
+.slider {
+  background-color: var(--ion-color-light-shade);
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 3px;
+}
+
+ion-button {
+  @media screen and (max-width: 576px) {
+    --padding-end: 0.5rem;
+    --padding-start: 0.5rem;
+  }
+}

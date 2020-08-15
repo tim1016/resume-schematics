@@ -39,6 +39,7 @@ export class <%= classify(name)%>FormComponent implements OnInit {
   focusList: Focus[];
   focusRefList: DocumentReference[];
   toggleAdvanced = false;
+  
   @ViewChild('formRef') formRef: FormGroupDirective;
 
   constructor(
