@@ -5,6 +5,7 @@ import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
 import { getNewSeqNo } from '../utilities/getNewSeqNo';
 import { FirestoreCrudService } from '../afmodule/firestore-crud.service';
 import { <%= classify(name)%>Service } from './<%= dasherize(name)%>.service';
+import { Noun } from '../utilities/types';
 
 declare type T = <%= classify(name)%>;
 @Component({
@@ -15,7 +16,7 @@ declare type T = <%= classify(name)%>;
 export class <%= classify(name)%>Component implements OnInit, OnDestroy {
   uiChanges: Subscription;
   addingNew = false;
-  pageTitle: string;
+  pageTitle: Noun;
   list: T[];
   numItems: number;
   itemType = '<%= camelize(name)%>';
@@ -29,11 +30,11 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.pageTitle = this.service.pageTitle;
-    this.service.list$.subscribe(list => {
+    this.service.list$.subscribe((list) => {
       this.list = list;
       this.numItems = list.length;
     });
-    this.uiChanges = this.service.addingNew<%= classify(name)%>$.subscribe(val => {
+    this.uiChanges = this.service.addingNew<%= classify(name)%>$.subscribe((val) => {
       this.addingNew = val;
     });
   }

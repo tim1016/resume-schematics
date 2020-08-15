@@ -5,3 +5,10 @@
 ion-content {
   --background: var(--ion-color-light);
 }
+
+.child-margin {
+  padding: 0 0.5rem;
+  & > * {
+    margin-bottom: 1rem;
+  }
+}

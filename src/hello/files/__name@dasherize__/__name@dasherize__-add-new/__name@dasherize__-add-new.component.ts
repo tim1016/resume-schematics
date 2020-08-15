@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FirestoreCrudService } from 'src/app/afmodule/firestore-crud.service';
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
+import { getSeqNo } from 'src/app/utilities/getNewSeqNo';
 
 declare type T = <%= classify(name)%>;
 

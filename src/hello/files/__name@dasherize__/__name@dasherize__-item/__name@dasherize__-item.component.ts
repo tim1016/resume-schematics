@@ -16,6 +16,7 @@ declare type T = <%= classify(name)%>;
 export class <%= classify(name)%>ItemComponent implements OnInit {
   @Input() item: T;
   @Input() itemIndex: number;
+  @Input() showToolbar: boolean;
   addingNew$: Observable<boolean>;
   editIndex$: Observable<number>;
   itemType = '<%= camelize(name)%>';

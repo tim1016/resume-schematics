@@ -16,6 +16,7 @@ import { <%= classify(name)%> } from 'src/app/<%= dasherize(name)%>/<%= dasheriz
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 import { Focus } from 'src/app/focus/focus.model';
 import { FirestoreReferencesService } from 'src/app/afmodule/firestore-references.service';
+import { Noun } from 'src/app/utilities/types';
 
 @Component({
   selector: 'app-<%= dasherize(name)%>-form',
@@ -34,7 +35,7 @@ export class <%= classify(name)%>FormComponent implements OnInit {
   @Output() delete = new EventEmitter<void>();
 
   form: FormGroup;
-  pageTitle: string;
+  pageTitle: Noun;
   focusList: Focus[];
   focusRefList: DocumentReference[];
   toggleAdvanced = false;

@@ -1,6 +1,8 @@
 <div class="ion-text-center ion-text-uppercase">
   <h2 class="line-across ion-margin-bottom">
-    <span> {{ formMode === 'new' ? 'Add New' : 'Edit' }} {{ pageTitle }} </span>
+    <span>
+      {{ formMode === 'new' ? 'Add New' : 'Edit' }} {{ pageTitle.singular }}
+    </span>
   </h2>
 </div>
 
