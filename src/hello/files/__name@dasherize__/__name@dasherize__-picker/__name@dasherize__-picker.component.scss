@@ -6,7 +6,9 @@
 
 ion-slides {
   --bullet-background: var(--ion-color-dark);
-  // display: flex;
+  & > * {
+    margin: auto 0;
+  }
 }
 
 .slider-title {

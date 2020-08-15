@@ -28,13 +28,14 @@
     >
       <ion-slide
         *ngFor="let item of list; let i = index"
-        (click)="selectItem(i)"
+
         style="cursor: pointer;"
       >
         <app-<%= dasherize(name)%>-item
           [item]="item"
           [itemIndex]="i"
           [showToolbar]="false"
+          (click)="selectItem(i)"
           [ngClass]="{ selected: selected[i] }"
         ></app-<%= dasherize(name)%>-item>
       </ion-slide>

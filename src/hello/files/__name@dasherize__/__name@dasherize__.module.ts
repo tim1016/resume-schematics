@@ -9,7 +9,7 @@ import { <%= classify(name)%>Component } from './<%= dasherize(name)%>.component
 import { <%= classify(name)%>ItemComponent } from './<%= dasherize(name)%>-item/<%= dasherize(name)%>-item.component';
 import { <%= classify(name)%>FormComponent } from './<%= dasherize(name)%>-form/<%= dasherize(name)%>-form.component';
 import { <%= classify(name)%>AddNewComponent } from './<%= dasherize(name)%>-add-new/<%= dasherize(name)%>-add-new.component';
-import { <%= classify(name)%>SliderComponent } from './<%= dasherize(name)%>-slider/<%= dasherize(name)%>-slider.component';
+import { <%= classify(name)%>PickerComponent } from './<%= dasherize(name)%>-picker/<%= dasherize(name)%>-picker.component';
 import { FocusModule } from '../focus/focus.module';
 
 const routes: Routes = [
@@ -24,7 +24,7 @@ const components = [
   <%= classify(name)%>ItemComponent,
   <%= classify(name)%>FormComponent,
   <%= classify(name)%>AddNewComponent,
-  <%= classify(name)%>SliderComponent,
+  <%= classify(name)%>PickerComponent,
 ];
 
 @NgModule({

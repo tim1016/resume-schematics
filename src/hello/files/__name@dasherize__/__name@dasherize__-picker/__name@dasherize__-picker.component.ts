@@ -14,11 +14,11 @@ import { FirestoreReferencesService } from 'src/app/afmodule/firestore-reference
 import { Noun } from 'src/app/utilities/types';
 
 @Component({
-  selector: 'app-<%= dasherize(name)%>-slider',
-  templateUrl: './<%= dasherize(name)%>-slider.component.html',
-  styleUrls: ['./<%= dasherize(name)%>-slider.component.scss'],
+  selector: 'app-<%= dasherize(name)%>-picker',
+  templateUrl: './<%= dasherize(name)%>-picker.component.html',
+  styleUrls: ['./<%= dasherize(name)%>-picker.component.scss'],
 })
-export class <%= classify(name)%>SliderComponent implements OnInit {
+export class <%= classify(name)%>PickerComponent implements OnInit {
   pageTitle: Noun;
   uiChanges: Subscription;
   addingNew = false;
