@@ -52,6 +52,7 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
     refList: [],
   };
 
+  @Input() filterFocusList: Focus[];
   @Output() <%= camelize(name)%>Selection = new EventEmitter<DocumentReference[]>();
   @ViewChild('selectionSlider', { static: true }) selectionSlider: IonSlides;
 

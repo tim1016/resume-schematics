@@ -9,11 +9,11 @@
 
 :host(.selected) {
   ion-card {
-    background-color: var(--ion-color-dark);
-    color: var(--ion-color-dark-contrast);
+    background-color: var(--ion-color-tertiary);
+    color: var(--ion-color-tertiary-contrast);
     ion-badge {
-      background-color: var(--ion-color-dark-contrast);
-      color: var(--ion-color-dark);
+      --background: var(--ion-color-tertiary-contrast);
+      --color: var(--ion-color-tertiary);
     }
   }
 }

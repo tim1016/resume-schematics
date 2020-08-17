@@ -28,7 +28,8 @@
         </div>
         
         <div *ngIf="!addingNew">
-          <app-filter-focus
+          <app-filter-focus 
+            *ngIf="numItems >= 1"
             (focusFilterEvent)="applyFocusFilter($event)"
           ></app-filter-focus>
           
