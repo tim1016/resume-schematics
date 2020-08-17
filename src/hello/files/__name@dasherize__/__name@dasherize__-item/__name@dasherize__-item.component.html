@@ -4,13 +4,11 @@
       <div>
         <h2 class="ion-text-uppercase">{{ item.title }}</h2>
       </div>
-      <div class="badge-container">
-        <ng-container *ngFor="let item$ of focusList$">
-          <ion-badge class="focus-item" slot="end">{{
-            (item$ | async)?.name
-          }}</ion-badge>
-        </ng-container>
-      </div>
+      <app-focus-badge
+        class="badges"
+        [list]="focusList$"
+        *ngIf="!hideBadge"
+      ></app-focus-badge>
     </div>
     <div class="item-text">
       <ion-text>{{ item.text }}</ion-text>

@@ -6,6 +6,8 @@ import { getNewSeqNo } from '../utilities/getNewSeqNo';
 import { FirestoreCrudService } from '../afmodule/firestore-crud.service';
 import { <%= classify(name)%>Service } from './<%= dasherize(name)%>.service';
 import { Noun } from '../utilities/types';
+import { Focus } from '../focus/focus.model';
+import { SharedFeaturesService } from '../services/shared-features.service';
 
 declare type T = <%= classify(name)%>;
 @Component({
@@ -20,11 +22,13 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
   list: T[];
   numItems: number;
   itemType = '<%= camelize(name)%>';
+  filterFocusList: Focus[] = [];
   firebaseCollectionName = this.itemType + 'List';
   filteredFocus = '';
 
   constructor(
     private service: <%= classify(name)%>Service, 
+    private sharedService: SharedFeaturesService,
     private crud: FirestoreCrudService
     ) {}
 
@@ -53,13 +57,11 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
   }
 
   includesFilter(item: T) {
-    if (this.filteredFocus.trim() == '') return true;
-    let include = false;
-    for (const focus of item.focus) {
-      if (focus.name.toLowerCase().includes(this.filteredFocus.toLowerCase()))
-        include = true;
-    }
-    return include;
+    return this.sharedService.includesFilter<T>(item, this.filterFocusList);
+  }
+
+  applyFocusFilter($event) {
+    this.filterFocusList = $event;
   }
 
   ngOnDestroy() {

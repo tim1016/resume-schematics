@@ -17,6 +17,7 @@ export class <%= classify(name)%>ItemComponent implements OnInit {
   @Input() item: T;
   @Input() itemIndex: number;
   @Input() showToolbar: boolean;
+  @Input() hideBadge: boolean;
   addingNew$: Observable<boolean>;
   editIndex$: Observable<number>;
   itemType = '<%= camelize(name)%>';

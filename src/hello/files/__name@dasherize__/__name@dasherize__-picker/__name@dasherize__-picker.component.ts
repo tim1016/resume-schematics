@@ -4,14 +4,19 @@ import {
   ViewChild,
   Output,
   EventEmitter,
+  Input
 } from '@angular/core';
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
 import { IonSlides } from '@ionic/angular';
 import { DocumentReference } from '@angular/fire/firestore';
 import { FirestoreReferencesService } from 'src/app/afmodule/firestore-references.service';
 import { Noun } from 'src/app/utilities/types';
+import { Focus } from 'src/app/focus/focus.model';
+import { SharedFeaturesService } from 'src/app/services/shared-features.service';
+
+declare type T = <%= classify(name)%>;
 
 @Component({
   selector: 'app-<%= dasherize(name)%>-picker',
@@ -35,10 +40,14 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
   sliderConfig = {
     spaceBetween: 10,
     centeredSlides: true,
-    slidesPerView: 1,
+    slidesPerView: 1.4,
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'fraction',
+    },
   };
 
-  selections: { <%= camelize(name)%>List: <%= classify(name)%>[]; refList: DocumentReference[] } = {
+  selections: { <%= camelize(name)%>List: T[]; refList: DocumentReference[] } = {
     <%= camelize(name)%>List: [],
     refList: [],
   };
@@ -48,7 +57,8 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
 
   constructor(
     private service: <%= classify(name)%>Service,
-    private refService: FirestoreReferencesService
+    private refService: FirestoreReferencesService,
+    private sharedService: SharedFeaturesService
   ) {}
 
   ngOnInit() {
@@ -102,6 +112,10 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
     } else {
       this.numSelected--;
     }
+  }
+
+  includesFilter(item: T) {
+    return this.sharedService.includesFilter<T>(item, this.filterFocusList);
   }
 
   clearSelection() {

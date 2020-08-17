@@ -5,9 +5,6 @@
 
   <div>
     <div class="slider-transition" *ngIf="numItems > 1">
-      <ion-button size="small" color="dark" *ngIf="isBeginning"
-        >{{ numItems }} Items</ion-button
-      >
       <ion-button
         size="small"
         color="dark"
@@ -26,19 +23,18 @@
       (ionSlideDidChange)="slideChanged()"
       [options]="sliderConfig"
     >
-      <ion-slide
-        *ngFor="let item of list; let i = index"
-
-        style="cursor: pointer;"
-      >
-        <app-<%= dasherize(name)%>-item
-          [item]="item"
-          [itemIndex]="i"
-          [showToolbar]="false"
-          (click)="selectItem(i)"
-          [ngClass]="{ selected: selected[i] }"
-        ></app-<%= dasherize(name)%>-item>
-      </ion-slide>
+      <ng-container *ngFor="let item of list; let i = index">
+        <ion-slide style="cursor: pointer;" *ngIf="includesFilter(item)">
+          <app-<%= dasherize(name)%>-item
+            [item]="item"
+            [itemIndex]="i"
+            [showToolbar]="false"
+            [hideBadge]="filterFocusList.length !== 0"
+            (click)="selectItem(i)"
+            [ngClass]="{ selected: selected[i] }"
+          ></app-<%= dasherize(name)%>-item>
+        </ion-slide>
+      </ng-container>
     </ion-slides>
 
     <div class="slider-selections">

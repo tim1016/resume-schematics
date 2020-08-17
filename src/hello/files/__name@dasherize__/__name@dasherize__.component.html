@@ -28,11 +28,10 @@
         </div>
         
         <div *ngIf="!addingNew">
-          <ion-searchbar
-            *ngIf="numItems >= 2"
-            placeholder="Filter by avatar"
-            [(ngModel)]="filteredFocus"
-          ></ion-searchbar>
+          <app-filter-focus
+            (focusFilterEvent)="applyFocusFilter($event)"
+          ></app-filter-focus>
+          
           <ion-reorder-group
             (ionItemReorder)="doReorder($event)"
             disabled="false"
@@ -43,6 +42,7 @@
                   [item]="item" 
                   [itemIndex]="i"
                   [showToolbar]="true"
+                  [hideBadge]="filterFocusList.length !== 0"
                 ></app-<%= dasherize(name)%>-item>
               </div>
             </div>
