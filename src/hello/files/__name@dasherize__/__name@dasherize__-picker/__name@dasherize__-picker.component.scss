@@ -12,8 +12,6 @@ ion-slides {
 }
 
 .slider-title {
-  background-color: var(--ion-color-dark);
-  color: var(--ion-color-dark-contrast);
   padding: 0.5rem;
   & h2 {
     line-height: 1;
@@ -29,7 +27,6 @@ ion-slides {
 .slider-selections {
   display: flex;
   justify-content: center;
-  background-color: #fff;
 }
 
 .num-selected-badge {
@@ -41,8 +38,6 @@ ion-slides {
 }
 
 .slider {
-  background-color: var(--ion-color-light-shade);
-  border: 1px solid var(--ion-color-light-shade);
   border-radius: 3px;
 }
 
