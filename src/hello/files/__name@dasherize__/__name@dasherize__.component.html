@@ -1,3 +1,10 @@
+<ng-container
+  *ngLet="{
+    addingNew: service.addingNew$ | async,
+    uiState: service.uiState$ | async,
+    list: service.summaryList$ | async
+  } as obs"
+>
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>{{ pageTitle.plural }}</ion-title>
@@ -53,3 +60,4 @@
     </ion-row>
   </ion-grid>
 </ion-content>
+</ng-container>
