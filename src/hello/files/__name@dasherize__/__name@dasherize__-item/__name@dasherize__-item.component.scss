@@ -45,15 +45,3 @@
     --text-shell-line-height: 3rem;
   }
 }
-
-.summary-title {
-  min-width: 150px;
-  & > app-text-shell {
-    --text-shell-line-height: 1rem;
-    max-width: 70%;
-
-    &.text-loaded {
-      max-width: inherit;
-    }
-  }
-}
