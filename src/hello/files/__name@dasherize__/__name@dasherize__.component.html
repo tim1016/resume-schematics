@@ -2,7 +2,7 @@
   *ngLet="{
     addingNew: service.addingNew$ | async,
     uiState: service.uiState$ | async,
-    list: service.summaryList$ | async
+    list: service.<%= camelize(name)%>List$ | async
   } as obs"
 >
   <ion-header>

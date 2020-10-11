@@ -47,7 +47,7 @@
             [itemType]="'<%= camelize(name)%>'"
             [actionMode]="'question'"
             [formMode]="'edit'"
-            (editSummary)="onStartEdit(itemIndex)"
+            (edit<%= classify(name)%>)="onStartEdit(itemIndex)"
           ></app-actions>
         </ion-toolbar>
       </ion-footer>

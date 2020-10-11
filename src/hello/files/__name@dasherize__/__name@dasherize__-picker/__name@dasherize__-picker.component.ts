@@ -16,7 +16,7 @@ import { Noun } from 'src/app/utilities/types';
 import { Focus } from 'src/app/focus/focus.model';
 import { SharedFeaturesService } from 'src/app/services/shared-features.service';
 import { Store } from '@ngrx/store';
-import * as from<%= classify(name)%>Actions from 'src/app/summary/store/actions';
+import * as from<%= classify(name)%>Actions from 'src/app/<%= dasherize(name)%>/store/actions';
 
 declare type T = <%= classify(name)%>;
 

@@ -15,12 +15,12 @@ import { <%= classify(name)%>AddNewComponent } from './<%= dasherize(name)%>-add
 import { <%= classify(name)%>PickerComponent } from './<%= dasherize(name)%>-picker/<%= dasherize(name)%>-picker.component';
 import { FocusModule } from '../focus/focus.module';
 
-import { reducers } from 'src/app/summary/store/reducers';
+import { reducers } from 'src/app/<%= dasherize(name)%>/store/reducers';
 import {
-  ReadSummaryEffect,
-  CreateNewSummaryEffect,
-  DeleteSummaryEffect,
-  UpdateSummaryEffect,
+  Read<%= classify(name)%>Effect,
+  CreateNew<%= classify(name)%>Effect,
+  Delete<%= classify(name)%>Effect,
+  Update<%= classify(name)%>Effect,
 } from './store/effects';
 
 const routes: Routes = [
@@ -45,12 +45,12 @@ const components = [
     ReactiveFormsModule,
     IonicModule,
     NgLetModule,
-    StoreModule.forFeature('summary', reducers),
+    StoreModule.forFeature('<%= camelize(name)%>', reducers),
     EffectsModule.forFeature([
-      ReadSummaryEffect,
-      CreateNewSummaryEffect,
-      DeleteSummaryEffect,
-      UpdateSummaryEffect,
+      Read<%= classify(name)%>Effect,
+      CreateNew<%= classify(name)%>Effect,
+      Delete<%= classify(name)%>Effect,
+      Update<%= classify(name)%>Effect,
     ]),
     RouterModule.forChild(routes),
     SharedModule,
