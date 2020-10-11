@@ -1,7 +1,8 @@
 <div class="ion-text-center ion-text-uppercase">
   <h2 class="line-across ion-margin-bottom">
     <span>
-      {{ formMode === 'new' ? 'Add New' : 'Edit' }} {{ pageTitle.singular }}
+      {{ formMode === 'new' ? 'Add New' : 'Edit' }}
+      {{ service.pageTitle.singular }}
     </span>
   </h2>
 </div>
@@ -29,7 +30,7 @@
     <app-actions
       slot="end"
       [itemType]="'<%= camelize(name)%>'"
-      [actionMode]="'answer'"
+      [actionMode]="actionMode"
       [formMode]="formMode"
       (save<%= classify(name) %>)="submitForm()" 
       (cancel<%= classify(name) %>)="onCancel()" 

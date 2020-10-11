@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
-import { rxFormConfig } from '../../utilities/rxFormValidation';
-import { DocumentReference } from '@angular/fire/firestore';
+import { rxFormConfig } from 'src/app/utilities/functions';
 
 import { <%= classify(name)%> } from 'src/app/<%= dasherize(name)%>/<%= dasherize(name)%>.model';
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
@@ -27,6 +26,7 @@ import { Noun } from 'src/app/utilities/types';
 export class <%= classify(name)%>FormComponent implements OnInit {
   @Input() formMode: string;
   @Input() item: <%= classify(name)%>;
+  @Input() actionMode: string;
 
   @Output() editSuccessful = new EventEmitter<<%= classify(name)%>>();
   @Output() editCancelled = new EventEmitter<boolean>();
@@ -37,19 +37,18 @@ export class <%= classify(name)%>FormComponent implements OnInit {
   form: FormGroup;
   pageTitle: Noun;
   focusList: Focus[];
-  focusRefList: DocumentReference[];
+  focusRefList: string[];
   toggleAdvanced = false;
   
   @ViewChild('formRef') formRef: FormGroupDirective;
 
   constructor(
     private rxFormBuilder: RxFormBuilder, 
-    private service: <%= classify(name)%>Service,
+    public service: <%= classify(name)%>Service,
     private refService: FirestoreReferencesService
   ) {}
 
   ngOnInit() {
-    this.pageTitle = this.service.pageTitle;
     if (this.item) {
       this.initRxForm(this.item.title, this.item.text);
       this.focusList = this.item.focus;
@@ -63,7 +62,7 @@ export class <%= classify(name)%>FormComponent implements OnInit {
 
   initRxForm(title: string = '', text: string = '') {
     rxFormConfig();
-    let new<%= classify(name)%> = new <%= classify(name)%>();
+    const new<%= classify(name)%> = new <%= classify(name)%>();
     new<%= classify(name)%>.title = title;
     new<%= classify(name)%>.text = text;
     this.form = this.rxFormBuilder.formGroup(new<%= classify(name)%>);
@@ -110,9 +109,9 @@ export class <%= classify(name)%>FormComponent implements OnInit {
     this.focusList = [];
     this.focusRefList = [];
     for (const focus of focii) {
-      let ref = this.refService.focusList.doc(focus.id).ref;
+      const ref = this.refService.focusList.doc(focus.id).ref;
       this.focusList.push(focus);
-      this.focusRefList.push(ref);
+      this.focusRefList.push(ref.path);
     }
   }
 }

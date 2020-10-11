@@ -1,32 +1,71 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
-import { LoadFirestoreDataService } from '../afmodule/load-firestore-data.service';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
-import { Noun } from '../utilities/types';
+import { Noun, UIState } from '../utilities/types';
+
+import { select, Store } from '@ngrx/store';
+import * as from<%= classify(name)%>Selectors from './store/selectors';
+import { ReadFirestoreDataService } from 'src/app/afmodule/read-firestore-data.service';
+import * as fromAuthSelectors from '../auth/store/selectors';
 
 @Injectable({
   providedIn: 'root',
 })
 export class <%= classify(name)%>Service {
-  addingNew<%= classify(name)%>$ = new BehaviorSubject<boolean>(false);
-  editIndex<%= classify(name)%>$ = new BehaviorSubject<number>(-1);
   pageTitle: Noun = {
-    singular: '<%= classify(name)%>',
-    plural: '<%= classify(name)%>s'
+    singular: 'ITEMNAME',
+    plural: 'ITEMNAMES',
   };
-  list$: Observable<<%= classify(name)%>[]>;
-  length = 0;
-  dataSub: Subscription;
+  collectionPath: string | null;
 
-  constructor(private dataService: LoadFirestoreDataService) {
-    this.list$ = this.dataService.<%= camelize(name)%>List$;
+  <%= dasherize(name)%>List$: Observable<<%= classify(name)%>[]>;
+  addingNew$: Observable<boolean>;
+  editIndex$: Observable<number>;
+  editItem$: Observable<<%= classify(name)%>>;
+  isLoading$: Observable<boolean>;
+  modifications$: Observable<boolean>;
+  operationFailed$: Observable<boolean>;
+  uiState$: Observable<UIState>;
+
+  constructor(
+    private store: Store,
+    private readFirestoreDataService: ReadFirestoreDataService
+  ) {
+    this.initValues();
   }
 
-  isAddingNew(operation: boolean): void {
-    this.addingNew<%= classify(name)%>$.next(operation);
+  initValues() {
+    this.<%= dasherize(name)%>List$ = this.store.pipe(
+      select(from<%= classify(name)%>Selectors.<%= dasherize(name)%>List)
+    );
+    this.addingNew$ = this.store.pipe(select(from<%= classify(name)%>Selectors.addingNew));
+    this.editIndex$ = this.store.pipe(select(from<%= classify(name)%>Selectors.editIndex));
+    this.editItem$ = this.store.pipe(select(from<%= classify(name)%>Selectors.editItem));
+    this.isLoading$ = this.store.pipe(select(from<%= classify(name)%>Selectors.isReading));
+    this.modifications$ = this.store.pipe(
+      select(from<%= classify(name)%>Selectors.modifications)
+    );
+    this.operationFailed$ = this.store.pipe(
+      select(from<%= classify(name)%>Selectors.operationFailed)
+    );
+    this.uiState$ = this.store.pipe(select(from<%= classify(name)%>Selectors.uiState));
   }
 
-  setEditIndex(index: number) {
-    this.editIndex<%= classify(name)%>$.next(index);
+  setCollection(uid: string) {
+    const userString = '/users/' + uid;
+    const remainder =
+      '/userData/itemsList/' + this.pageTitle.singular.toLowerCase() + 'List';
+    this.collectionPath = userString + remainder;
+  }
+
+  get list$() {
+    return this.store.pipe(select(fromAuthSelectors.currentUser)).pipe(
+      switchMap((currentUser) => {
+        return this.readFirestoreDataService.getListWithFocus<<%= classify(name)%>>(
+          this.collectionPath
+        );
+      })
+    );
   }
 }

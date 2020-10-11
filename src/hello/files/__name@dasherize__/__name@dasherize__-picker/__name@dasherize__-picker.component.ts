@@ -15,6 +15,8 @@ import { FirestoreReferencesService } from 'src/app/afmodule/firestore-reference
 import { Noun } from 'src/app/utilities/types';
 import { Focus } from 'src/app/focus/focus.model';
 import { SharedFeaturesService } from 'src/app/services/shared-features.service';
+import { Store } from '@ngrx/store';
+import * as from<%= classify(name)%>Actions from 'src/app/summary/store/actions';
 
 declare type T = <%= classify(name)%>;
 
@@ -24,16 +26,14 @@ declare type T = <%= classify(name)%>;
   styleUrls: ['./<%= dasherize(name)%>-picker.component.scss'],
 })
 export class <%= classify(name)%>PickerComponent implements OnInit {
-  pageTitle: Noun;
   uiChanges: Subscription;
-  addingNew = false;
   numItems: number;
   numSelected = 0;
   list: <%= classify(name)%>[];
   selected: boolean[];
   sub: Subscription;
   // Slider props
-  activeIndex: number = 0;
+  activeIndex = 0;
   isBeginning = true;
   isEnd = false;
   // slider options
@@ -53,17 +53,17 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
   };
 
   @Input() filterFocusList: Focus[];
-  @Output() <%= camelize(name)%>Selection = new EventEmitter<DocumentReference[]>();
+  @Output() <%= camelize(name)%>Selection = new EventEmitter<<%= classify(name)%>[]>();
   @ViewChild('selectionSlider', { static: true }) selectionSlider: IonSlides;
 
   constructor(
-    private service: <%= classify(name)%>Service,
+    public service: <%= classify(name)%>Service,
     private refService: FirestoreReferencesService,
-    private sharedService: SharedFeaturesService
+    private sharedService: SharedFeaturesService,
+    private store: Store
   ) {}
 
   ngOnInit() {
-    this.pageTitle = this.service.pageTitle;
     this.sub = this.service.list$.subscribe((list) => {
       this.list = list;
       this.numItems = list.length;
@@ -71,9 +71,6 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
       if (this.numItems === 1) {
         this.selectItem(0);
       }
-    });
-    this.uiChanges = this.service.addingNew<%= classify(name)%>$.subscribe((val) => {
-      this.addingNew = val;
     });
   }
 
@@ -103,7 +100,7 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
     });
     // console.log(this.selections.length);
     // this.selections.<%= camelize(name)%>List.forEach((item) => console.log(item.title));
-    this.<%= camelize(name)%>Selection.emit(this.selections.refList);
+    this.<%= camelize(name)%>Selection.emit(this.selections.<%= camelize(name)%>List);
   }
 
   selectItem(i: number) {
@@ -125,7 +122,7 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
   }
 
   startAddingNew() {
-    this.service.isAddingNew(true);
+    this.store.dispatch(from<%= classify(name)%>Actions.startCreateNew());
   }
 
   ngOnDestroy() {

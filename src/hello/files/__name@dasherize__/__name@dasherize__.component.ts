@@ -1,50 +1,44 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { select, Store } from '@ngrx/store';
 
 import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
-import { getNewSeqNo } from '../utilities/getNewSeqNo';
-import { FirestoreCrudService } from '../afmodule/firestore-crud.service';
+import { getNewSeqNo } from '../utilities/functions';
 import { <%= classify(name)%>Service } from './<%= dasherize(name)%>.service';
-import { Noun } from '../utilities/types';
 import { Focus } from '../focus/focus.model';
 import { SharedFeaturesService } from '../services/shared-features.service';
+import * as from<%= classify(name)%>Actions from './store/actions';
+import * as fromAuthSelectors from 'src/app/auth/store/selectors';
+import { enterToDisplay, listState } from 'src/app/shared/animations';
 
 declare type T = <%= classify(name)%>;
 @Component({
   selector: 'app-<%= dasherize(name)%>',
   templateUrl: './<%= dasherize(name)%>.component.html',
   styleUrls: ['./<%= dasherize(name)%>.component.scss'],
+  animations: [enterToDisplay, listState],
 })
 export class <%= classify(name)%>Component implements OnInit, OnDestroy {
-  uiChanges: Subscription;
-  addingNew = false;
-  pageTitle: Noun;
   list: T[];
-  numItems: number;
-  itemType = '<%= camelize(name)%>';
   filterFocusList: Focus[] = [];
-  firebaseCollectionName = this.itemType + 'List';
   filteredFocus = '';
+  uiStateCSS: any;
 
   constructor(
-    private service: <%= classify(name)%>Service, 
+    public service: <%= classify(name)%>Service,
     private sharedService: SharedFeaturesService,
-    private crud: FirestoreCrudService
+    private store: Store,
     ) {}
 
   ngOnInit() {
-    this.pageTitle = this.service.pageTitle;
-    this.service.list$.subscribe((list) => {
-      this.list = list;
-      this.numItems = list.length;
-    });
-    this.uiChanges = this.service.addingNew<%= classify(name)%>$.subscribe((val) => {
-      this.addingNew = val;
+    this.store.pipe(select(fromAuthSelectors.currentUser)).subscribe(user => {
+      if (user) {
+        this.store.dispatch(from<%= classify(name)%>Actions.startRead());
+      }
     });
   }
 
   startAddingNew() {
-    this.service.isAddingNew(true);
+    this.store.dispatch(from<%= classify(name)%>Actions.startCreateNew());
   }
 
   doReorder(event: any) {
@@ -52,7 +46,7 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
     const newSeqNo = getNewSeqNo<T>(from, to, this.list.slice());
     let newItem = this.list[from];
     newItem = { ...newItem, seqNo: newSeqNo };
-    this.crud.updateItem<T>(newItem.id, this.firebaseCollectionName, newItem);
+    this.store.dispatch(from<%= classify(name)%>Actions.update({ item: newItem }));
     event.detail.complete();
   }
 
@@ -64,7 +58,5 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
     this.filterFocusList = $event;
   }
 
-  ngOnDestroy() {
-    if (this.uiChanges) this.uiChanges.unsubscribe;
-  }
+  ngOnDestroy() {}
 }

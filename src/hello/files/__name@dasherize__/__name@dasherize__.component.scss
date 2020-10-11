@@ -1,14 +1,17 @@
 :host {
   display: block;
 }
-
-ion-content {
-  --background: var(--ion-color-light);
+ion-progress-bar {
+  --background: var(--ion-color-warning);
+  --progress-background: var(--ion-color-warning-tint);
+  --buffer-background: transparent;
+}
+.transparent-bar {
+  --background: transparent;
+  --progress-background: transparent;
+  --buffer-background: transparent;
 }
 
-.child-margin {
-  padding: 0 0.5rem;
-  & > * {
-    margin-bottom: 1rem;
-  }
+.page-item {
+  display: block;
 }

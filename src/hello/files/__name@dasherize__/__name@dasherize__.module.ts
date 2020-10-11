@@ -1,8 +1,11 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Routes, RouterModule } from '@angular/router';
+import { NgLetModule } from '@ngrx-utils/store';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../shared/shared.module';
 import { <%= classify(name)%>Component } from './<%= dasherize(name)%>.component';
@@ -11,6 +14,14 @@ import { <%= classify(name)%>FormComponent } from './<%= dasherize(name)%>-form/
 import { <%= classify(name)%>AddNewComponent } from './<%= dasherize(name)%>-add-new/<%= dasherize(name)%>-add-new.component';
 import { <%= classify(name)%>PickerComponent } from './<%= dasherize(name)%>-picker/<%= dasherize(name)%>-picker.component';
 import { FocusModule } from '../focus/focus.module';
+
+import { reducers } from 'src/app/summary/store/reducers';
+import {
+  ReadSummaryEffect,
+  CreateNewSummaryEffect,
+  DeleteSummaryEffect,
+  UpdateSummaryEffect,
+} from './store/effects';
 
 const routes: Routes = [
   {
@@ -33,12 +44,19 @@ const components = [
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
+    NgLetModule,
+    StoreModule.forFeature('summary', reducers),
+    EffectsModule.forFeature([
+      ReadSummaryEffect,
+      CreateNewSummaryEffect,
+      DeleteSummaryEffect,
+      UpdateSummaryEffect,
+    ]),
     RouterModule.forChild(routes),
     SharedModule,
     FocusModule,
   ],
   declarations: [...components],
-  exports: [...components],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  exports: [...components]
 })
 export class <%= classify(name)%>Module {}

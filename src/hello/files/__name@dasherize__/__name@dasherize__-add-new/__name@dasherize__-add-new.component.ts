@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FirestoreCrudService } from 'src/app/afmodule/firestore-crud.service';
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
-import { getSeqNo } from 'src/app/utilities/getNewSeqNo';
+import { getSeqNo } from 'src/app/utilities/functions';
+import { Store } from '@ngrx/store';
+import * as from<%= classify(name)%>Actions from '../store/actions';
 
 declare type T = <%= classify(name)%>;
 
@@ -13,23 +14,17 @@ declare type T = <%= classify(name)%>;
 })
 export class <%= classify(name)%>AddNewComponent implements OnInit {
   @Input() list: T[];
-  itemType = '<%= camelize(name)%>';
-  firebaseCollectionName = this.itemType + 'List';
-  
-  constructor(
-    private service: <%= classify(name)%>Service, 
-    private crud: FirestoreCrudService
-  ) {}
+
+  constructor(private service: <%= classify(name)%>Service, private store: Store) {}
 
   ngOnInit() {}
 
   onAdd(item: T) {
     const newItem = { ...item, seqNo: getSeqNo(this.list) };
-    this.crud.addItem<T>(this.firebaseCollectionName, newItem);
-    this.service.isAddingNew(false);
+    this.store.dispatch(from<%= classify(name)%>Actions.createNew({ payload: newItem }));
   }
 
   onCancelAdd() {
-    this.service.isAddingNew(false);
+    this.store.dispatch(from<%= classify(name)%>Actions.cancel());
   }
 }

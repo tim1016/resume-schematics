@@ -1,72 +1,74 @@
-<div class="slider">
-  <div class="slider-title ion-text-center">
-    <h2>{{ pageTitle.plural }}</h2>
-  </div>
-
-  <div>
-    <div class="slider-transition" *ngIf="numItems > 1">
-      <ion-button
-        size="small"
-        color="dark"
-        *ngIf="!isBeginning"
-        (click)="prev()"
-        ><ion-icon slot="icon-only" name="arrow-back"></ion-icon
-      ></ion-button>
-
-      <ion-button size="small" color="dark" *ngIf="!isEnd" (click)="next()"
-        ><ion-icon slot="icon-only" name="arrow-forward"></ion-icon
-      ></ion-button>
+<ng-container *ngLet="service.addingNew$ | async as addingNew">
+  <div class="slider">
+    <div class="slider-title ion-text-center">
+      <h2>{{ service.pageTitle.plural }}</h2>
     </div>
 
-    <ion-slides
-      #selectionSlider
-      (ionSlideDidChange)="slideChanged()"
-      [options]="sliderConfig"
-    >
-      <ng-container *ngFor="let item of list; let i = index">
-        <ion-slide style="cursor: pointer;" *ngIf="includesFilter(item)">
-          <app-<%= dasherize(name)%>-item
-            [item]="item"
-            [itemIndex]="i"
-            [showToolbar]="false"
-            [hideBadge]="filterFocusList.length !== 0"
-            (click)="selectItem(i)"
-            [ngClass]="{ selected: selected[i] }"
-          ></app-<%= dasherize(name)%>-item>
-        </ion-slide>
-      </ng-container>
-    </ion-slides>
+    <div>
+      <div class="slider-transition" *ngIf="numItems > 1">
+        <ion-button
+          size="small"
+          color="dark"
+          *ngIf="!isBeginning"
+          (click)="prev()"
+          ><ion-icon slot="icon-only" name="arrow-back"></ion-icon
+        ></ion-button>
 
-    <div class="slider-selections">
-      <ion-button
-        fill="outline"
-        color="success"
-        (click)="done()"
-        [disabled]="numSelected === 0"
-        ><ion-icon name="checkmark"></ion-icon>Select
-        <ion-badge class="num-selected-badge" color="success">{{
-          numSelected
-        }}</ion-badge>
-      </ion-button>
+        <ion-button size="small" color="dark" *ngIf="!isEnd" (click)="next()"
+          ><ion-icon slot="icon-only" name="arrow-forward"></ion-icon
+        ></ion-button>
+      </div>
 
-      <ion-button
-        fill="outline"
-        color="danger"
-        (click)="clearSelection()"
-        [disabled]="numSelected === 0"
-        ><ion-icon name="close-outline"></ion-icon>Clear
-      </ion-button>
+      <ion-slides
+        #selectionSlider
+        (ionSlideDidChange)="slideChanged()"
+        [options]="sliderConfig"
+      >
+        <ng-container *ngFor="let item of list; let i = index">
+          <ion-slide style="cursor: pointer" *ngIf="includesFilter(item)">
+            <app-<%= dasherize(name)%>-item
+              [item]="item"
+              [itemIndex]="i"
+              [showToolbar]="false"
+              [hideBadge]="filterFocusList.length !== 0"
+              (click)="selectItem(i)"
+              [ngClass]="{ selected: selected[i] }"
+            ></app-<%= dasherize(name)%>-item>
+          </ion-slide>
+        </ng-container>
+      </ion-slides>
 
-      <ion-button (click)="startAddingNew()" fill="outline">
-        <ion-icon
-          color="primary"
-          name="add-outline"
-          fill="clear"
-          class="slider-add-button"
-        ></ion-icon>
-        Add New
-      </ion-button>
+      <div class="slider-selections">
+        <ion-button
+          fill="outline"
+          color="success"
+          (click)="done()"
+          [disabled]="numSelected === 0"
+          ><ion-icon name="checkmark"></ion-icon>Select
+          <ion-badge class="num-selected-badge" color="success">{{
+            numSelected
+          }}</ion-badge>
+        </ion-button>
+
+        <ion-button
+          fill="outline"
+          color="danger"
+          (click)="clearSelection()"
+          [disabled]="numSelected === 0"
+          ><ion-icon name="close-outline"></ion-icon>Clear
+        </ion-button>
+
+        <ion-button (click)="startAddingNew()" fill="outline">
+          <ion-icon
+            color="primary"
+            name="add-outline"
+            fill="clear"
+            class="slider-add-button"
+          ></ion-icon>
+          Add New
+        </ion-button>
+      </div>
     </div>
+    <app-<%= dasherize(name)%>-add-new [list]="list" *ngIf="addingNew"></app-<%= dasherize(name)%>-add-new>
   </div>
-  <app-<%= dasherize(name)%>-add-new [list]="list" *ngIf="addingNew"></app-<%= dasherize(name)%>-add-new>
-</div>
+</ng-container>

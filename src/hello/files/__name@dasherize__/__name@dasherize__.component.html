@@ -5,59 +5,72 @@
     list: service.summaryList$ | async
   } as obs"
 >
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>{{ pageTitle.plural }}</ion-title>
-    <ion-buttons slot="start">
-      <ion-menu-button menu="sideBarLeft"></ion-menu-button>
-    </ion-buttons>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>{{ service.pageTitle.plural }}</ion-title>
+      <ion-buttons slot="start">
+        <ion-menu-button menu="sideBarLeft"></ion-menu-button>
+      </ion-buttons>
 
-    <ion-buttons slot="end" *ngIf="!addingNew">
-      <ion-button (click)="startAddingNew()" fill="outline">
-        <ion-icon slot="icon-only" name="add-outline" fill="clear"></ion-icon>
-        <span class="hide-small">Add New</span>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+      <ion-buttons slot="end" *ngIf="obs.uiState == 'display'">
+        <ion-button (click)="startAddingNew()" fill="outline">
+          <ion-icon slot="icon-only" name="add-outline" fill="clear"></ion-icon>
+          <span class="hide-small">Add New</span>
+        </ion-button>
+      </ion-buttons>
 
-<ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" size-md="10" offset-md="1" size-xl="8" offset-xl="2">
-        <app-no-item
-          *ngIf="numItems === 0 && !addingNew"
-          [pageTitle]="pageTitle"
-        ></app-no-item>
+      <ion-progress-bar
+      type="indeterminate"
+      [ngClass]="{ 'transparent-bar': obs.uiState != 'reading' }"
+    ></ion-progress-bar>
+    </ion-toolbar>
+  </ion-header>
 
-        <div *ngIf="addingNew">
-          <app-<%= dasherize(name)%>-add-new [list]="list"></app-<%= dasherize(name)%>-add-new>
-        </div>
-        
-        <div *ngIf="!addingNew">
-          <app-filter-focus 
-            *ngIf="numItems >= 1"
-            (focusFilterEvent)="applyFocusFilter($event)"
-          ></app-filter-focus>
-          
-          <ion-reorder-group
-            (ionItemReorder)="doReorder($event)"
-            disabled="false"
-          >
-            <div *ngFor="let item of list; let i = index">
-              <div class="child-margin" *ngIf="includesFilter(item)">
-                <app-<%= dasherize(name)%>-item 
-                  [item]="item" 
-                  [itemIndex]="i"
-                  [showToolbar]="true"
-                  [hideBadge]="filterFocusList.length !== 0"
-                ></app-<%= dasherize(name)%>-item>
-              </div>
+  <ion-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="10" offset-md="1" size-xl="8" offset-xl="2">
+          <div class="page-item">
+            <app-no-item
+              *ngIf="obs.list.length === 0 && obs.uiState == 'display'"
+              [pageTitle]="service.pageTitle"
+            ></app-no-item>
+          </div>
+
+          <div class="page-item">
+            <div *ngIf="obs.uiState == 'creating'" @enterToDisplay>
+              <app-<%= dasherize(name)%>-add-new [list]="obs.list"></app-<%= dasherize(name)%>-add-new>
             </div>
-          </ion-reorder-group>
-      </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+          </div>
+
+          <div class="page-item">
+            <div *ngIf="!obs.uiState != 'creating' && obs.list.length > 0" @enterToDisplay>
+              <app-filter-focus 
+                (focusFilterEvent)="applyFocusFilter($event)"
+              ></app-filter-focus>
+              
+              <ion-reorder-group
+                (ionItemReorder)="doReorder($event)"
+                disabled="false"
+              >
+                <div
+                *ngFor="let item of obs.list; let i = index"
+                [@listState]="obs.uiState"
+                >
+                  <div class="child-margin" *ngIf="includesFilter(item)">
+                    <app-<%= dasherize(name)%>-item 
+                      [item]="item" 
+                      [itemIndex]="i"
+                      [showToolbar]="true"
+                      [hideBadge]="filterFocusList.length !== 0"
+                    ></app-<%= dasherize(name)%>-item>
+                  </div>
+                </div>
+              </ion-reorder-group>        
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
 </ng-container>

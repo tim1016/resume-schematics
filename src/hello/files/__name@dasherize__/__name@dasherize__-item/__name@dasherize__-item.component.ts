@@ -1,11 +1,13 @@
 import { OnInit, Input, Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
 import { Focus } from 'src/app/focus/focus.model';
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
-import { FirestoreCrudService } from 'src/app/afmodule/firestore-crud.service';
-import { SharedFeaturesService } from 'src/app/services/shared-features.service';
+import { Store } from '@ngrx/store';
+
+import * as from<%= classify(name)%>Actions from 'src/app/<%= dasherize(name)%>/store/actions';
 
 declare type T = <%= classify(name)%>;
 @Component({
@@ -21,44 +23,71 @@ export class <%= classify(name)%>ItemComponent implements OnInit {
   addingNew$: Observable<boolean>;
   editIndex$: Observable<number>;
   itemType = '<%= camelize(name)%>';
+  alert: HTMLIonAlertElement;
   firebaseCollectionName = this.itemType + 'List';
   focusList$: Observable<Focus>[];
 
   constructor(
-    private service: <%= classify(name)%>Service,
-    private crud: FirestoreCrudService,
-    private sharedFeaturesService: SharedFeaturesService
+    public service: <%= classify(name)%>Service,
+    private store: Store,
+    public alertController: AlertController
   ) {}
 
-  ngOnInit() {
-    this.editIndex$ = this.service.editIndex<%= classify(name)%>$;
-    this.addingNew$ = this.service.addingNew<%= classify(name)%>$;
-    
-    // The following is promise based - not used in favor of observable based
-    // this.item.focus = await this.sharedFeaturesService.getDataWithReferences<
-    //   Focus
-    // >(this.item.focusRef);
+  ngOnInit() {}
 
-    this.focusList$ = this.item.focusRef.map((focus) =>
-      this.sharedFeaturesService.convertRefToObs<Focus>(focus.path)
-    );
-  }
-
-  onDelete() {
-    this.crud.deleteItem<T>(this.firebaseCollectionName, this.item);
-    this.service.setEditIndex(-1);
+  async onDelete() {
+    this.store.dispatch(from<%= classify(name)%>Actions.startDelete());
+    const confirm = await this.presentAlertConfirm();
+    if (confirm) {
+      this.confirmDelete();
+    } else {
+      this.confirmCancel();
+    }
   }
 
   onStartEdit(index: number) {
-    this.service.setEditIndex(index);
+    this.store.dispatch(from<%= classify(name)%>Actions.startUpdate({ index }));
   }
 
   onCancelEdit() {
-    this.service.setEditIndex(-1);
+    this.store.dispatch(from<%= classify(name)%>Actions.cancel());
   }
 
   onEdit(item: T) {
-    this.crud.updateItem<T>(this.item.id, this.firebaseCollectionName, item);
-    this.service.setEditIndex(-1);
+    const updatedItem = { ...item, id: this.item.id };
+    this.store.dispatch(from<%= classify(name)%>Actions.update({ item: updatedItem }));
+  }
+
+  async presentAlertConfirm() {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>((resolve) => {
+      resolveFunction = resolve;
+    });
+    this.alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Confirmation',
+      message: 'Do you want to delete this item ?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => resolveFunction(false),
+        },
+        {
+          text: 'Yes',
+          handler: () => resolveFunction(true),
+        },
+      ],
+    });
+    await this.alert.present();
+    return promise;
+  }
+
+  confirmDelete() {
+    this.store.dispatch(from<%= classify(name)%>Actions.deleteItem({ item: this.item }));
+  }
+  confirmCancel() {
+    this.store.dispatch(from<%= classify(name)%>Actions.cancel());
   }
 }
