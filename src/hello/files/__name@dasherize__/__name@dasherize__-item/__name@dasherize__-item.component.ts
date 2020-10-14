@@ -1,13 +1,11 @@
 import { OnInit, Input, Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AlertController } from '@ionic/angular';
-
-import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
-import { Focus } from 'src/app/focus/focus.model';
-import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 import { Store } from '@ngrx/store';
 
+import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
+import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
+
 import * as from<%= classify(name)%>Actions from 'src/app/<%= dasherize(name)%>/store/actions';
+import { SharedFeaturesService } from '../../services/shared-features.service';
 
 declare type T = <%= classify(name)%>;
 @Component({
@@ -20,28 +18,22 @@ export class <%= classify(name)%>ItemComponent implements OnInit {
   @Input() itemIndex: number;
   @Input() showToolbar: boolean;
   @Input() hideBadge: boolean;
-  addingNew$: Observable<boolean>;
-  editIndex$: Observable<number>;
-  itemType = '<%= camelize(name)%>';
-  alert: HTMLIonAlertElement;
-  firebaseCollectionName = this.itemType + 'List';
-  focusList$: Observable<Focus>[];
-
+  
   constructor(
     public service: <%= classify(name)%>Service,
     private store: Store,
-    public alertController: AlertController
+    public sharedService: SharedFeaturesService,
   ) {}
 
   ngOnInit() {}
 
   async onDelete() {
     this.store.dispatch(from<%= classify(name)%>Actions.startDelete());
-    const confirm = await this.presentAlertConfirm();
+    const confirm = await this.sharedService.presentAlertConfirm();
     if (confirm) {
-      this.confirmDelete();
+      this.store.dispatch(from<%= classify(name)%>Actions.deleteItem({ item: this.item }));
     } else {
-      this.confirmCancel();
+      this.store.dispatch(from<%= classify(name)%>Actions.cancel());
     }
   }
 
@@ -56,38 +48,5 @@ export class <%= classify(name)%>ItemComponent implements OnInit {
   onEdit(item: T) {
     const updatedItem = { ...item, id: this.item.id };
     this.store.dispatch(from<%= classify(name)%>Actions.update({ item: updatedItem }));
-  }
-
-  async presentAlertConfirm() {
-    let resolveFunction: (confirm: boolean) => void;
-    const promise = new Promise<boolean>((resolve) => {
-      resolveFunction = resolve;
-    });
-    this.alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Confirmation',
-      message: 'Do you want to delete this item ?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => resolveFunction(false),
-        },
-        {
-          text: 'Yes',
-          handler: () => resolveFunction(true),
-        },
-      ],
-    });
-    await this.alert.present();
-    return promise;
-  }
-
-  confirmDelete() {
-    this.store.dispatch(from<%= classify(name)%>Actions.deleteItem({ item: this.item }));
-  }
-  confirmCancel() {
-    this.store.dispatch(from<%= classify(name)%>Actions.cancel());
   }
 }

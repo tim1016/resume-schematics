@@ -5,9 +5,12 @@ import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
 import { Noun, UIState } from '../utilities/types';
 
 import { select, Store } from '@ngrx/store';
-import * as from<%= classify(name)%>Selectors from './store/selectors';
 import { ReadFirestoreDataService } from 'src/app/afmodule/read-firestore-data.service';
-import * as fromAuthSelectors from '../auth/store/selectors';
+import { setCollectionPath } from 'src/app/utilities/functions/';
+
+import * as fromAuthSelectors from 'src/app/auth/store/selectors';
+import * as fromUISelectors from 'src/app/store/selectors';
+import * as from<%= classify(name)%>Selectors from './store/selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -17,13 +20,11 @@ export class <%= classify(name)%>Service {
     singular: 'ITEMNAME',
     plural: 'ITEMNAMES',
   };
-  collectionPath: string | null;
+  collectionPath: string | null = null;
 
   <%= dasherize(name)%>List$: Observable<<%= classify(name)%>[]>;
-  addingNew$: Observable<boolean>;
   editIndex$: Observable<number>;
   editItem$: Observable<<%= classify(name)%>>;
-  isLoading$: Observable<boolean>;
   modifications$: Observable<boolean>;
   operationFailed$: Observable<boolean>;
   uiState$: Observable<UIState>;
@@ -39,33 +40,30 @@ export class <%= classify(name)%>Service {
     this.<%= dasherize(name)%>List$ = this.store.pipe(
       select(from<%= classify(name)%>Selectors.<%= dasherize(name)%>List)
     );
-    this.addingNew$ = this.store.pipe(select(from<%= classify(name)%>Selectors.addingNew));
     this.editIndex$ = this.store.pipe(select(from<%= classify(name)%>Selectors.editIndex));
     this.editItem$ = this.store.pipe(select(from<%= classify(name)%>Selectors.editItem));
-    this.isLoading$ = this.store.pipe(select(from<%= classify(name)%>Selectors.isReading));
-    this.modifications$ = this.store.pipe(
-      select(from<%= classify(name)%>Selectors.modifications)
-    );
     this.operationFailed$ = this.store.pipe(
       select(from<%= classify(name)%>Selectors.operationFailed)
     );
-    this.uiState$ = this.store.pipe(select(from<%= classify(name)%>Selectors.uiState));
-  }
-
-  setCollection(uid: string) {
-    const userString = '/users/' + uid;
-    const remainder =
-      '/userData/itemsList/' + this.pageTitle.singular.toLowerCase() + 'List';
-    this.collectionPath = userString + remainder;
+    this.modifications$ = this.store.pipe(
+      select(fromUISelectors.modifications),
+    );
+    this.uiState$ = this.store.pipe(select(fromUISelectors.uiState));
   }
 
   get list$() {
     return this.store.pipe(select(fromAuthSelectors.currentUser)).pipe(
-      switchMap((currentUser) => {
-        return this.readFirestoreDataService.getListWithFocus<<%= classify(name)%>>(
-          this.collectionPath
+      switchMap(currentUser => {
+        if (this.collectionPath === null) {
+          this.collectionPath = setCollectionPath(
+            this.pageTitle.singular,
+            currentUser.uid,
+          );
+        }
+        return this.readFirestoreDataService.getListWithFocus<Summary>(
+          this.collectionPath,
         );
-      })
+      }),
     );
   }
 }

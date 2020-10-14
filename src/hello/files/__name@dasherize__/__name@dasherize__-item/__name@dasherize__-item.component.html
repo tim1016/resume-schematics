@@ -1,7 +1,7 @@
 <ng-container
   *ngLet="{
     editIndex: service.editIndex$ | async,
-    addingNew: service.addingNew$ | async,
+    addingNew: (service.uiState$ | async) == 'adding',
     uiState: service.uiState$ | async
   } as obs"
 >
@@ -32,7 +32,7 @@
         <ion-toolbar>
           <ion-reorder>
             <ion-button
-              [disabled]="obs.uiState == 'editing' && obs.uiState == 'adding'"
+              [disabled]="obs.uiState == 'updating' && obs.uiState == 'adding'"
               type="button"
               color="tertiary"
               size="small"

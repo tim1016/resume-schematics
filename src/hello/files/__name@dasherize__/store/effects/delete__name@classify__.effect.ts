@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, mapTo } from 'rxjs/operators';
 
 import * as from<%= classify(name)%>Actions from '../actions';
+import * as fromUIActions from 'src/app/store/UIState.actions';
 import { <%= classify(name)%>Service } from '../../<%= dasherize(name)%>.service';
 import { FirestoreUtilitiesService } from 'src/app/afmodule/firestore-utilities.service';
 
@@ -23,6 +24,54 @@ export class Delete<%= classify(name)%>Effect {
             }),
           );
       }),
+    ),
+  );
+
+  updateUIonStart$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.startDelete),
+      mapTo(
+        fromUIActions.setUItoDeleting({
+          activeItem: this.service.pageTitle.singular,
+        }),
+      ),
+    ),
+  );
+
+  updateUIonEnd$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        from<%= classify(name)%>Actions.deleteSuccess,
+        from<%= classify(name)%>Actions.deleteFailure,
+        from<%= classify(name)%>Actions.cancel,
+      ),
+      mapTo(
+        fromUIActions.setUItoDefault({
+          activeItem: '',
+        }),
+      ),
+    ),
+  );
+
+  toastSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.deleteSuccess),
+      mapTo(
+        fromUIActions.toast({
+          message: 'Successfully deleted',
+        }),
+      ),
+    ),
+  );
+
+  toastFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.deleteFailure),
+      mapTo(
+        fromUIActions.toast({
+          message: 'Item deletion failed',
+        }),
+      ),
     ),
   );
 

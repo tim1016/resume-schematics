@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
+import { switchMap, map, catchError, mapTo } from 'rxjs/operators';
 
-import { switchMap, map, catchError } from 'rxjs/operators';
 import * as from<%= classify(name)%>Actions from '../actions';
+import * as fromUIActions from 'src/app/store/UIState.actions';
 import { <%= classify(name)%>Service } from '../../<%= dasherize(name)%>.service';
 import { FirestoreUtilitiesService } from 'src/app/afmodule/firestore-utilities.service';
 
@@ -24,6 +25,54 @@ export class CreateNew<%= classify(name)%>Effect {
             }),
           );
       }),
+    ),
+  );
+
+  updateUIonStart$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.startCreateNew),
+      mapTo(
+        fromUIActions.setUItoAdding({
+          activeItem: this.service.pageTitle.singular,
+        }),
+      ),
+    ),
+  );
+
+  updateUIonEnd$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        from<%= classify(name)%>Actions.createNewSuccess,
+        from<%= classify(name)%>Actions.createNewFailure,
+        from<%= classify(name)%>Actions.cancel,
+      ),
+      mapTo(
+        fromUIActions.setUItoDefault({
+          activeItem: null,
+        }),
+      ),
+    ),
+  );
+
+  toastSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.createNewSuccess),
+      mapTo(
+        fromUIActions.toast({
+          message: 'Successfully created',
+        }),
+      ),
+    ),
+  );
+
+  toastFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.createNewFailure),
+      mapTo(
+        fromUIActions.toast({
+          message: 'Item addition failed',
+        }),
+      ),
     ),
   );
 

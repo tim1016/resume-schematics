@@ -1,4 +1,4 @@
-<ng-container *ngLet="service.addingNew$ | async as addingNew">
+<ng-container *ngLet="(service.uiState$ | async) == 'adding' as addingNew">
   <div class="slider">
     <div class="slider-title ion-text-center">
       <h2>{{ service.pageTitle.plural }}</h2>

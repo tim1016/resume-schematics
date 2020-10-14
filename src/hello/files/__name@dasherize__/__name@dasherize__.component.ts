@@ -18,7 +18,6 @@ declare type T = <%= classify(name)%>;
   animations: [enterToDisplay, listState],
 })
 export class <%= classify(name)%>Component implements OnInit, OnDestroy {
-  list: T[];
   filterFocusList: Focus[] = [];
   filteredFocus = '';
   uiStateCSS: any;
@@ -41,10 +40,10 @@ export class <%= classify(name)%>Component implements OnInit, OnDestroy {
     this.store.dispatch(from<%= classify(name)%>Actions.startCreateNew());
   }
 
-  doReorder(event: any) {
+  doReorder(event: any, list: T[]) {
     const { from, to } = event.detail;
-    const newSeqNo = getNewSeqNo<T>(from, to, this.list.slice());
-    let newItem = this.list[from];
+    const newSeqNo = getNewSeqNo<T>(from, to, list.slice());
+    let newItem = list[from];
     newItem = { ...newItem, seqNo: newSeqNo };
     this.store.dispatch(from<%= classify(name)%>Actions.update({ item: newItem }));
     event.detail.complete();

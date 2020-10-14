@@ -6,6 +6,7 @@ import { mapTo, withLatestFrom } from 'rxjs/operators';
 import { switchMap, map, catchError } from 'rxjs/operators';
 
 import * as from<%= classify(name)%>Actions from '../actions';
+import * as fromUIActions from 'src/app/store/UIState.actions';
 import { <%= classify(name)%>Service } from '../../<%= dasherize(name)%>.service';
 import * as fromAuthSelectors from 'src/app/auth/store/selectors';
 
@@ -17,7 +18,6 @@ export class Read<%= classify(name)%>Effect {
       withLatestFrom(this.store.pipe(select(fromAuthSelectors.currentUser))),
       switchMap(([_, user]) => {
         if (user && user.uid) {
-          this.service.setCollection(user.uid);
           return this.service.list$.pipe(
             map(list => from<%= classify(name)%>Actions.readSuccess({ list })),
             catchError(e => {
@@ -36,6 +36,28 @@ export class Read<%= classify(name)%>Effect {
     this.actions$.pipe(
       ofType(from<%= classify(name)%>Actions.readSuccess, from<%= classify(name)%>Actions.readFailure),
       mapTo(from<%= classify(name)%>Actions.endRead()),
+    ),
+  );
+
+  updateUIonStart$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.startRead),
+      mapTo(
+        fromUIActions.setUItoReading({
+          activeItem: this.service.pageTitle.singular,
+        }),
+      ),
+    ),
+  );
+
+  updateUIonEnd$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(from<%= classify(name)%>Actions.endRead),
+      mapTo(
+        fromUIActions.setUItoDefault({
+          activeItem: '',
+        }),
+      ),
     ),
   );
 

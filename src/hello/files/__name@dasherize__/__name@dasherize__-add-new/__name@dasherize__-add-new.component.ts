@@ -15,7 +15,7 @@ declare type T = <%= classify(name)%>;
 export class <%= classify(name)%>AddNewComponent implements OnInit {
   @Input() list: T[];
 
-  constructor(private service: <%= classify(name)%>Service, private store: Store) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {}
 

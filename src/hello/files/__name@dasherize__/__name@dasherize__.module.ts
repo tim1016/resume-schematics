@@ -21,6 +21,7 @@ import {
   CreateNew<%= classify(name)%>Effect,
   Delete<%= classify(name)%>Effect,
   Update<%= classify(name)%>Effect,
+  CancelToastEffect
 } from './store/effects';
 
 const routes: Routes = [
@@ -51,6 +52,7 @@ const components = [
       CreateNew<%= classify(name)%>Effect,
       Delete<%= classify(name)%>Effect,
       Update<%= classify(name)%>Effect,
+      CancelToastEffect,
     ]),
     RouterModule.forChild(routes),
     SharedModule,

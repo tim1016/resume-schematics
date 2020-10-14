@@ -1,6 +1,6 @@
 <ng-container
   *ngLet="{
-    addingNew: service.addingNew$ | async,
+    addingNew: (service.uiState$ | async) == 'adding',
     uiState: service.uiState$ | async,
     list: service.<%= camelize(name)%>List$ | async
   } as obs"
@@ -38,19 +38,22 @@
           </div>
 
           <div class="page-item">
-            <div *ngIf="obs.uiState == 'creating'" @enterToDisplay>
+            <div *ngIf="obs.uiState == 'adding'" @enterToDisplay>
               <app-<%= dasherize(name)%>-add-new [list]="obs.list"></app-<%= dasherize(name)%>-add-new>
             </div>
           </div>
 
           <div class="page-item">
-            <div *ngIf="!obs.uiState != 'creating' && obs.list.length > 0" @enterToDisplay>
+            <div
+            *ngIf="obs.uiState != 'adding' && obs.list.length > 0"
+            @enterToDisplay
+          >
               <app-filter-focus 
                 (focusFilterEvent)="applyFocusFilter($event)"
               ></app-filter-focus>
               
               <ion-reorder-group
-                (ionItemReorder)="doReorder($event)"
+                (ionItemReorder)="doReorder($event, obs.list)"
                 disabled="false"
               >
                 <div
