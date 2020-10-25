@@ -12,7 +12,7 @@ import { enterToDisplay, listState } from 'src/app/shared/animations';
 import { Logger } from '@app/core';
 import { CanComponentDeactivate } from '@app/guards/unsavedChanges.guard';
 
-const log = new Logger('SummaryComponent');
+const log = new Logger('<%= classify(name)%>Component');
 
 declare type T = <%= classify(name)%>;
 @Component({
