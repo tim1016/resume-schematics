@@ -7,6 +7,9 @@ import * as from<%= classify(name)%>Actions from '../actions';
 import * as fromUIActions from 'src/app/store/UIState.actions';
 import { <%= classify(name)%>Service } from '../../<%= dasherize(name)%>.service';
 import { FirestoreUtilitiesService } from 'src/app/afmodule/firestore-utilities.service';
+import { Logger } from '@app/core/logger.service';
+
+const log = new Logger('CreateNew<%= classify(name)%>Effect');
 
 @Injectable()
 export class CreateNew<%= classify(name)%>Effect {
@@ -14,16 +17,14 @@ export class CreateNew<%= classify(name)%>Effect {
     this.actions$.pipe(
       ofType(from<%= classify(name)%>Actions.createNew),
       switchMap(action => {
-        console.log('collectionPath: ', this.service.collectionPath);
-        return this.firestoreUtilities
-          .add(this.service.collectionPath, action.payload)
-          .pipe(
-            map(docRef => from<%= classify(name)%>Actions.createNewSuccess(action)),
-            catchError(e => {
-              console.log(e);
-              return of(from<%= classify(name)%>Actions.createNewFailure);
-            }),
-          );
+        log.debug('collectionPath: ', this.service.collectionPath);
+        return this.firestoreUtilities.add(this.service.collectionPath, action.payload).pipe(
+          map(docRef => from<%= classify(name)%>Actions.createNewSuccess(action)),
+          catchError(e => {
+            log.debug(e);
+            return of(from<%= classify(name)%>Actions.createNewFailure);
+          }),
+        );
       }),
     ),
   );
@@ -41,11 +42,7 @@ export class CreateNew<%= classify(name)%>Effect {
 
   updateUIonEnd$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(
-        from<%= classify(name)%>Actions.createNewSuccess,
-        from<%= classify(name)%>Actions.createNewFailure,
-        from<%= classify(name)%>Actions.cancel,
-      ),
+      ofType(from<%= classify(name)%>Actions.createNewSuccess, from<%= classify(name)%>Actions.createNewFailure, from<%= classify(name)%>Actions.cancel),
       mapTo(
         fromUIActions.setUItoDefault({
           activeItem: null,

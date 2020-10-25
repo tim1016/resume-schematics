@@ -21,28 +21,8 @@ export const editItem = createSelector(
   <%= camelize(name)%>FeatureSelector,
   (itemState: ItemStateInterface<<%= classify(name)%>>): <%= classify(name)%> => itemState.editItem,
 );
-export const addingNew = createSelector(
-  <%= camelize(name)%>FeatureSelector,
-  (itemState: ItemStateInterface<<%= classify(name)%>>): boolean => itemState.isAdding,
-);
-export const isReading = createSelector(
-  <%= camelize(name)%>FeatureSelector,
-  (itemState: ItemStateInterface<<%= classify(name)%>>): boolean => itemState.isReading,
-);
-export const modifications = createSelector(
-  <%= camelize(name)%>FeatureSelector,
-  (itemState: ItemStateInterface<<%= classify(name)%>>): boolean => {
-    return (
-      itemState.isAdding || itemState.isDeleting || itemState.editIndex !== -1
-    );
-  },
-);
 export const operationFailed = createSelector(
   <%= camelize(name)%>FeatureSelector,
   (itemState: ItemStateInterface<<%= classify(name)%>>): boolean =>
     itemState.operationFailed,
-);
-export const uiState = createSelector(
-  <%= camelize(name)%>FeatureSelector,
-  (itemState: ItemStateInterface<<%= classify(name)%>>): UIState => itemState.uiState,
 );

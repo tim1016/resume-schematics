@@ -7,6 +7,9 @@ import * as from<%= classify(name)%>Actions from '../actions';
 import * as fromUIActions from 'src/app/store/UIState.actions';
 import { <%= classify(name)%>Service } from '../../<%= dasherize(name)%>.service';
 import { FirestoreUtilitiesService } from 'src/app/afmodule/firestore-utilities.service';
+import { Logger } from '@app/core';
+
+const log = new Logger('Delete<%= classify(name)%>Effect');
 
 @Injectable()
 export class Delete<%= classify(name)%>Effect {
@@ -14,15 +17,13 @@ export class Delete<%= classify(name)%>Effect {
     this.actions$.pipe(
       ofType(from<%= classify(name)%>Actions.deleteItem),
       switchMap(action => {
-        return this.firestoreUtilities
-          .delete(this.service.collectionPath, action.item)
-          .pipe(
-            map(() => from<%= classify(name)%>Actions.deleteSuccess(action)),
-            catchError(e => {
-              console.log(e);
-              return of(from<%= classify(name)%>Actions.deleteFailure);
-            }),
-          );
+        return this.firestoreUtilities.delete(this.service.collectionPath, action.item).pipe(
+          map(() => from<%= classify(name)%>Actions.deleteSuccess(action)),
+          catchError(e => {
+            log.debug(e);
+            return of(from<%= classify(name)%>Actions.deleteFailure);
+          }),
+        );
       }),
     ),
   );
@@ -40,11 +41,7 @@ export class Delete<%= classify(name)%>Effect {
 
   updateUIonEnd$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(
-        from<%= classify(name)%>Actions.deleteSuccess,
-        from<%= classify(name)%>Actions.deleteFailure,
-        from<%= classify(name)%>Actions.cancel,
-      ),
+      ofType(from<%= classify(name)%>Actions.deleteSuccess, from<%= classify(name)%>Actions.deleteFailure),
       mapTo(
         fromUIActions.setUItoDefault({
           activeItem: '',

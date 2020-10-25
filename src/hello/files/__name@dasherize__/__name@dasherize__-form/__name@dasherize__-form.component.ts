@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { rxFormConfig } from 'src/app/utilities/functions';
@@ -15,7 +7,9 @@ import { <%= classify(name)%> } from 'src/app/<%= dasherize(name)%>/<%= dasheriz
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 import { Focus } from 'src/app/focus/focus.model';
 import { FirestoreReferencesService } from 'src/app/afmodule/firestore-references.service';
-import { Noun } from 'src/app/utilities/types';
+import { Logger } from '@app/core/logger.service';
+
+const log = new Logger('<%= classify(name)%>FormComponent');
 
 @Component({
   selector: 'app-<%= dasherize(name)%>-form',
@@ -35,7 +29,6 @@ export class <%= classify(name)%>FormComponent implements OnInit {
   @Output() delete = new EventEmitter<void>();
 
   form: FormGroup;
-  pageTitle: Noun;
   focusList: Focus[];
   focusRefList: string[];
   toggleAdvanced = false;
@@ -87,7 +80,7 @@ export class <%= classify(name)%>FormComponent implements OnInit {
         this.addSuccessful.emit(new<%= classify(name)%>);
       }
     } else {
-      console.log('form was not valid');
+      log.debug('form was not valid');
     }
   }
 

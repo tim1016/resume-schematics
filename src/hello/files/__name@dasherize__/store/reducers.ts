@@ -1,6 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { ItemStateInterface } from 'src/app/store/types/ItemState.interface';
-import { UIState } from 'src/app/utilities/types';
 
 import * as from<%= classify(name)%>Actions from './actions';
 import {
@@ -14,11 +13,7 @@ const initialState: ItemStateInterface<<%= classify(name)%>> = {
   itemList: [],
   editIndex: -1,
   editItem: null,
-  isAdding: false,
-  isDeleting: false,
-  isReading: false,
   operationFailed: null,
-  uiState: 'display' as UIState,
 };
 const <%= camelize(name)%>Reducer = createReducer(
   initialState,
@@ -28,45 +23,31 @@ const <%= camelize(name)%>Reducer = createReducer(
       ...state,
       editIndex: -1,
       editItem: null,
-      isAdding: false,
-      isDeleting: false,
-      isReading: false,
       operationFailed: null,
-      uiState: 'display' as UIState,
     }),
   ),
   on(from<%= classify(name)%>Actions.startCreateNew, state => ({
     ...state,
-    isAdding: true,
-    uiState: 'creating' as UIState,
   })),
   on(from<%= classify(name)%>Actions.createNewSuccess, state => ({
     ...state,
-    isAdding: false,
     operationFailed: false,
-    uiState: 'display' as UIState,
   })),
   on(from<%= classify(name)%>Actions.createNewFailure, state => ({
     ...state,
-    isAdding: false,
     operationFailed: true,
-    uiState: 'display' as UIState,
   })),
   on(
     from<%= classify(name)%>Actions.startRead,
     (state): ItemStateInterface<<%= classify(name)%>> => ({
       ...state,
-      isReading: true,
       operationFailed: null,
-      uiState: 'reading' as UIState,
     }),
   ),
   on(
     from<%= classify(name)%>Actions.endRead,
     (state): ItemStateInterface<<%= classify(name)%>> => ({
       ...state,
-      isReading: false,
-      uiState: 'display' as UIState,
     }),
   ),
   on(
@@ -76,7 +57,6 @@ const <%= camelize(name)%>Reducer = createReducer(
         ...state,
         itemList: [...action.list],
         operationFailed: false,
-        uiState: 'display' as UIState,
       };
     },
   ),
@@ -85,7 +65,6 @@ const <%= camelize(name)%>Reducer = createReducer(
     (state): ItemStateInterface<<%= classify(name)%>> => ({
       ...state,
       operationFailed: true,
-      uiState: 'display' as UIState,
     }),
   ),
   on(
@@ -94,7 +73,6 @@ const <%= camelize(name)%>Reducer = createReducer(
       return {
         ...state,
         editIndex: action.index,
-        uiState: 'editing' as UIState,
       };
     },
   ),
@@ -114,8 +92,6 @@ const <%= camelize(name)%>Reducer = createReducer(
     (state): ItemStateInterface<<%= classify(name)%>> => {
       return {
         ...state,
-        isDeleting: true,
-        uiState: 'deleting' as UIState,
       };
     },
   ),
@@ -147,7 +123,6 @@ const <%= camelize(name)%>Reducer = createReducer(
         editIndex: -1,
         editItem: null,
         operationFailed: false,
-        uiState: 'display' as UIState,
       };
     },
   ),
@@ -161,8 +136,6 @@ const <%= camelize(name)%>Reducer = createReducer(
         ...state,
         itemList: updated<%= classify(name)%>List,
         operationFailed: false,
-        isDeleting: false,
-        uiState: 'display' as UIState,
         editIndex: -1,
         editItem: null,
       };
@@ -183,7 +156,6 @@ const <%= camelize(name)%>Reducer = createReducer(
       ...state,
       editIndex: -1,
       editItem: null,
-      isDeleting: false,
       operationFailed: true,
     }),
   ),

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
 import { getSeqNo } from 'src/app/utilities/functions';
 import { Store } from '@ngrx/store';
@@ -25,6 +24,6 @@ export class <%= classify(name)%>AddNewComponent implements OnInit {
   }
 
   onCancelAdd() {
-    this.store.dispatch(from<%= classify(name)%>Actions.cancel());
+    this.store.dispatch(from<%= classify(name)%>Actions.cancel({message: 'Item was not created'}));
   }
 }

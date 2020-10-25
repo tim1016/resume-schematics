@@ -8,6 +8,9 @@ import * as fromUIActions from 'src/app/store/UIState.actions';
 import { <%= classify(name)%>Service } from '../../<%= dasherize(name)%>.service';
 import { <%= classify(name)%> } from '../../<%= dasherize(name)%>.model';
 import { FirestoreUtilitiesService } from 'src/app/afmodule/firestore-utilities.service';
+import { Logger } from '@app/core';
+
+const log = new Logger('Update<%= classify(name)%>Effect');
 
 @Injectable()
 export class Update<%= classify(name)%>Effect {
@@ -15,16 +18,14 @@ export class Update<%= classify(name)%>Effect {
     this.actions$.pipe(
       ofType(from<%= classify(name)%>Actions.update),
       switchMap(action => {
-        console.log('item: ', action.item);
-        return this.firestoreUtilities
-          .update<<%= classify(name)%>>(this.service.collectionPath, action.item)
-          .pipe(
-            map(() => from<%= classify(name)%>Actions.updateSuccess(action)),
-            catchError(e => {
-              console.log(e);
-              return of(from<%= classify(name)%>Actions.updateFailure);
-            }),
-          );
+        log.debug('item from effect: ', action.item);
+        return this.firestoreUtilities.update<<%= classify(name)%>>(this.service.collectionPath, action.item).pipe(
+          map(() => from<%= classify(name)%>Actions.updateSuccess(action)),
+          catchError(e => {
+            log.debug(e);
+            return of(from<%= classify(name)%>Actions.updateFailure);
+          }),
+        );
       }),
     ),
   );
@@ -42,11 +43,7 @@ export class Update<%= classify(name)%>Effect {
 
   updateUIonEnd$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(
-        from<%= classify(name)%>Actions.updateSuccess,
-        from<%= classify(name)%>Actions.updateFailure,
-        from<%= classify(name)%>Actions.cancel,
-      ),
+      ofType(from<%= classify(name)%>Actions.update, from<%= classify(name)%>Actions.cancel),
       mapTo(
         fromUIActions.setUItoDefault({
           activeItem: '',
@@ -60,7 +57,7 @@ export class Update<%= classify(name)%>Effect {
       ofType(from<%= classify(name)%>Actions.updateSuccess),
       mapTo(
         fromUIActions.toast({
-          message: 'Update successful',
+          message: 'Successfully updated',
         }),
       ),
     ),

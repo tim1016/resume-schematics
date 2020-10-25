@@ -13,8 +13,7 @@ import { <%= classify(name)%>ItemComponent } from './<%= dasherize(name)%>-item/
 import { <%= classify(name)%>FormComponent } from './<%= dasherize(name)%>-form/<%= dasherize(name)%>-form.component';
 import { <%= classify(name)%>AddNewComponent } from './<%= dasherize(name)%>-add-new/<%= dasherize(name)%>-add-new.component';
 import { <%= classify(name)%>PickerComponent } from './<%= dasherize(name)%>-picker/<%= dasherize(name)%>-picker.component';
-import { FocusModule } from '../focus/focus.module';
-
+import { UnsavedChangesGuard } from '@app/guards/unsavedChanges.guard';
 import { reducers } from 'src/app/<%= dasherize(name)%>/store/reducers';
 import {
   Read<%= classify(name)%>Effect,
@@ -28,6 +27,7 @@ const routes: Routes = [
   {
     path: '',
     component: <%= classify(name)%>Component,
+    canDeactivate: [UnsavedChangesGuard],
   },
 ];
 
@@ -56,7 +56,6 @@ const components = [
     ]),
     RouterModule.forChild(routes),
     SharedModule,
-    FocusModule,
   ],
   declarations: [...components],
   exports: [...components]

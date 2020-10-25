@@ -1,18 +1,10 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Output,
-  EventEmitter,
-  Input
-} from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
 import { Subscription } from 'rxjs';
 import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
 import { IonSlides } from '@ionic/angular';
 import { DocumentReference } from '@angular/fire/firestore';
 import { FirestoreReferencesService } from 'src/app/afmodule/firestore-references.service';
-import { Noun } from 'src/app/utilities/types';
 import { Focus } from 'src/app/focus/focus.model';
 import { SharedFeaturesService } from 'src/app/services/shared-features.service';
 import { Store } from '@ngrx/store';
@@ -25,7 +17,7 @@ declare type T = <%= classify(name)%>;
   templateUrl: './<%= dasherize(name)%>-picker.component.html',
   styleUrls: ['./<%= dasherize(name)%>-picker.component.scss'],
 })
-export class <%= classify(name)%>PickerComponent implements OnInit {
+export class <%= classify(name)%>PickerComponent implements OnInit, OnDestroy {
   uiChanges: Subscription;
   numItems: number;
   numSelected = 0;
@@ -93,13 +85,11 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
     this.selections.refList = [];
     this.selected.forEach((isSelected, index) => {
       if (isSelected) {
-        let docRef = this.refService.<%= camelize(name)%>List.doc(this.list[index].id).ref;
+        const docRef = this.refService.<%= camelize(name)%>List.doc(this.list[index].id).ref;
         this.selections.<%= camelize(name)%>List.push(this.list[index]);
         this.selections.refList.push(docRef);
       }
     });
-    // console.log(this.selections.length);
-    // this.selections.<%= camelize(name)%>List.forEach((item) => console.log(item.title));
     this.<%= camelize(name)%>Selection.emit(this.selections.<%= camelize(name)%>List);
   }
 
@@ -126,6 +116,6 @@ export class <%= classify(name)%>PickerComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
+    if (this.sub) {this.sub.unsubscribe()}
   }
 }

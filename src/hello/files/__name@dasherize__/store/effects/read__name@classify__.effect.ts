@@ -9,6 +9,9 @@ import * as from<%= classify(name)%>Actions from '../actions';
 import * as fromUIActions from 'src/app/store/UIState.actions';
 import { <%= classify(name)%>Service } from '../../<%= dasherize(name)%>.service';
 import * as fromAuthSelectors from 'src/app/auth/store/selectors';
+import { Logger } from '@app/core';
+
+const log = new Logger('Read<%= classify(name)%>Effect');
 
 @Injectable()
 export class Read<%= classify(name)%>Effect {
@@ -21,7 +24,7 @@ export class Read<%= classify(name)%>Effect {
           return this.service.list$.pipe(
             map(list => from<%= classify(name)%>Actions.readSuccess({ list })),
             catchError(e => {
-              console.log(e);
+              log.debug(e);
               return of(from<%= classify(name)%>Actions.readFailure());
             }),
           );
@@ -61,9 +64,5 @@ export class Read<%= classify(name)%>Effect {
     ),
   );
 
-  constructor(
-    private actions$: Actions,
-    private service: <%= classify(name)%>Service,
-    private store: Store,
-  ) {}
+  constructor(private actions$: Actions, private service: <%= classify(name)%>Service, private store: Store) {}
 }
