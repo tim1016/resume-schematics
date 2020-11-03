@@ -3,12 +3,12 @@ import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { RxFormBuilder } from '@rxweb/reactive-form-validators';
 import { rxFormConfig } from 'src/app/utilities/functions';
 
-import { <%= classify(name)%> } from 'src/app/<%= dasherize(name)%>/<%= dasherize(name)%>.model';
-import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
-import { Focus } from 'src/app/focus/focus.model';
-import { FirestoreReferencesService } from 'src/app/afmodule/firestore-references.service';
-import { Logger } from '@app/core/logger.service';
+import { <%= classify(name)%> } from '@app/<%= dasherize(name)%>/<%= dasherize(name)%>.model';
+import { <%= classify(name)%>Service } from '@app/<%= dasherize(name)%>/<%= dasherize(name)%>.service';
+import { Focus } from '@app/focus/focus.model';
+import { CredentialsService } from '@app/auth/credentials.service';
 
+import { Logger } from '@app/core/logger.service';
 const log = new Logger('<%= classify(name)%>FormComponent');
 
 @Component({
@@ -29,36 +29,32 @@ export class <%= classify(name)%>FormComponent implements OnInit {
   @Output() delete = new EventEmitter<void>();
 
   form: FormGroup;
-  focusList: Focus[];
-  focusRefList: string[];
+  focusList: Focus[] = [];
+  focusRefList: string[] = [];
   toggleAdvanced = false;
-  
+
   @ViewChild('formRef') formRef: FormGroupDirective;
 
   constructor(
-    private rxFormBuilder: RxFormBuilder, 
+    private rxFormBuilder: RxFormBuilder,
     public service: <%= classify(name)%>Service,
-    private refService: FirestoreReferencesService
+    private credentialsService: CredentialsService,
   ) {}
 
   ngOnInit() {
-    if (this.item) {
-      this.initRxForm(this.item.title, this.item.text);
-      this.focusList = this.item.focus;
-      this.focusRefList = this.item.focusRef;
-    } else {
-      this.initRxForm();
-      this.focusList = [];
-      this.focusRefList = [];
+    if (!this.item) {
+      this.item = new <%= classify(name)%>();
     }
+    this.focusList = this.item.focus;
+    this.focusRefList = this.item.focusRef;
+    this.initRxForm();
   }
 
-  initRxForm(title: string = '', text: string = '') {
+  initRxForm() {
     rxFormConfig();
-    const new<%= classify(name)%> = new <%= classify(name)%>();
-    new<%= classify(name)%>.title = title;
-    new<%= classify(name)%>.text = text;
-    this.form = this.rxFormBuilder.formGroup(new<%= classify(name)%>);
+    let newItem = new <%= classify(name)%>();
+    newItem = Object.assign(newItem, this.item);
+    this.form = this.rxFormBuilder.formGroup(newItem);
   }
 
   submitForm() {
@@ -66,22 +62,20 @@ export class <%= classify(name)%>FormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) {
-      const { title, text } = this.form.value;
-      const new<%= classify(name)%> = new <%= classify(name)%>();
-      new<%= classify(name)%>.title = title;
-      new<%= classify(name)%>.text = text;
-      new<%= classify(name)%>.focus = this.focusList;
-      new<%= classify(name)%>.focusRef = this.focusRefList;
-      new<%= classify(name)%>.seqNo = this.item?.seqNo;
-      if (this.formMode === 'edit') {
-        this.editSuccessful.emit(new<%= classify(name)%>);
-      } else {
-        this.addSuccessful.emit(new<%= classify(name)%>);
-      }
+    if (this.formMode === 'edit') {
+      this.editSuccessful.emit(this.createNew());
     } else {
-      log.debug('form was not valid');
+      this.addSuccessful.emit(this.createNew());
     }
+  }
+
+  createNew(): <%= classify(name)%> {
+    let newItem = new <%= classify(name)%>();
+    newItem = Object.assign(newItem, this.form.value);
+    newItem.focus = this.focusList;
+    newItem.focusRef = this.focusRefList;
+    newItem.seqNo = this.item?.seqNo;
+    return newItem;
   }
 
   onDelete() {
@@ -102,9 +96,9 @@ export class <%= classify(name)%>FormComponent implements OnInit {
     this.focusList = [];
     this.focusRefList = [];
     for (const focus of focii) {
-      const ref = this.refService.focusList.doc(focus.id).ref;
+      const focusPath = this.credentialsService.collectionPath('focus') + '/' + focus.id;
       this.focusList.push(focus);
-      this.focusRefList.push(ref.path);
+      this.focusRefList.push(focusPath);
     }
   }
 }

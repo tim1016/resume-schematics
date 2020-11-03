@@ -1,13 +1,14 @@
 import { OnInit, Input, Component } from '@angular/core';
-import { Store } from '@ngrx/store';
 
-import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
-import { <%= classify(name)%>Service } from '../<%= dasherize(name)%>.service';
+import { <%= classify(name)%> } from '@app/<%= dasherize(name)%>/<%= dasherize(name)%>.model';
+import { <%= classify(name)%>Service } from '@app/<%= dasherize(name)%>/<%= dasherize(name)%>.service';
+import { ComponentControllerService } from '@app/services/componentController.service';
+import { Logger } from '@app/core';
 
-import * as from<%= classify(name)%>Actions from 'src/app/<%= dasherize(name)%>/store/actions';
-import { SharedFeaturesService } from '../../services/shared-features.service';
+const log = new Logger('<%= classify(name)%>ItemComponent');
 
 declare type T = <%= classify(name)%>;
+
 @Component({
   selector: 'app-<%= dasherize(name)%>-item',
   templateUrl: './<%= dasherize(name)%>-item.component.html',
@@ -18,34 +19,31 @@ export class <%= classify(name)%>ItemComponent implements OnInit {
   @Input() itemIndex: number;
   @Input() showToolbar: boolean;
   @Input() hideBadge: boolean;
-  
-  constructor(public service: <%= classify(name)%>Service, private store: Store, public sharedService: SharedFeaturesService) {}
+
+  constructor(public service: <%= classify(name)%>Service, private controllerService: ComponentControllerService) {}
 
   ngOnInit() {}
 
   async onDelete() {
-    this.store.dispatch(from<%= classify(name)%>Actions.startDelete());
-    const confirm = await this.sharedService.presentAlertConfirm(
+    this.service.setUItoDeleting();
+    const confirm = await this.controllerService.presentAlertConfirm(
       'Confirm delete',
-      'Do you really want to delete this item?',
+      'Do you really want to delete this item?'
     );
     if (confirm) {
-      this.store.dispatch(from<%= classify(name)%>Actions.deleteItem({ item: this.item }));
-    } else {
-      this.store.dispatch(from<%= classify(name)%>Actions.cancel({ message: 'Item was not deleted' }));
+      this.service.delete(this.item.id);
     }
   }
 
-  onStartEdit(index: number) {
-    this.store.dispatch(from<%= classify(name)%>Actions.startUpdate({ index }));
+  onStartEdit(index: number): void {
+    this.service.setUItoUpdating(index);
   }
 
   onCancelEdit() {
-    this.store.dispatch(from<%= classify(name)%>Actions.cancel({ message: 'The changes were discarded' }));
+    this.service.cancel();
   }
 
   onEdit(item: T) {
-    const updatedItem = { ...item, id: this.item.id };
-    this.store.dispatch(from<%= classify(name)%>Actions.update({ item: updatedItem }));
+    this.service.update(item, this.item.id);
   }
 }

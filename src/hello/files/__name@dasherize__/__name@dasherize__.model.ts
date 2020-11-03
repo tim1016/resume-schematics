@@ -1,15 +1,16 @@
 import { required, prop } from '@rxweb/reactive-form-validators';
+
 import { Focus } from '../focus/focus.model';
 
 export class <%= classify(name)%> {
   @required()
-  title: string;
+  title = '';
   @required()
-  text: string;
+  text = '';
   @required()
   focus: Focus[] = [];
   @prop()
-  focusRef: string[];
+  focusRef: string[] = [];
   seqNo: number;
   id: string;
 }

@@ -6,33 +6,24 @@
   } as obs"
 >
   <ng-container *ngIf="obs.uiState != 'reading'">
-    <ion-card
-      *ngIf="obs.editIndex !== itemIndex"
-      class="ion-no-margin ion-margin-vertical"
-    >
+    <ion-card *ngIf="obs.editIndex !== itemIndex" class="ion-no-margin ion-margin-vertical">
       <ion-card-content class="ion-no-margin ion-margin-vertical">
         <div class="title-with-badge">
           <div class="ion-text-uppercase">
-            <div class="<%= dasherize(name)%>-title">
-              {{ item.title }}
-            </div>
+            <div class="<%= dasherize(name)%>-title">{{ item.title }}</div>
           </div>
 
-          <app-focus-badge
-            class="badges"
-            [focusList]="item.focus"
-            *ngIf="!hideBadge"
-          ></app-focus-badge>
+          <app-focus-badge class="badges" [focusList]="item.focus" *ngIf="!hideBadge"></app-focus-badge>
         </div>
         <div class="item-text">
           {{ item.text }}
         </div>
       </ion-card-content>
-      <ion-footer *ngIf="obs.uiState == 'display' && showToolbar === true">
+      <ion-footer *ngIf="obs.uiState == 'default' && showToolbar === true">
         <ion-toolbar>
           <ion-reorder>
             <ion-button
-              [disabled]="obs.uiState == 'updating' && obs.uiState == 'adding'"
+              [disabled]="obs.uiState == 'updating' || obs.uiState == 'adding'"
               type="button"
               color="tertiary"
               size="small"
@@ -42,7 +33,7 @@
             ></ion-button>
           </ion-reorder>
           <app-actions
-            *ngIf="obs.uiState == 'display'"
+            *ngIf="obs.uiState == 'default'"
             slot="end"
             [itemType]="'<%= camelize(name)%>'"
             [actionMode]="'question'"
@@ -73,12 +64,6 @@
             <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
           </div>
         </div>
-
-        <!-- <app-focus-badge
-          class="badges"
-          [focusList]="item.focus"
-          *ngIf="!hideBadge"
-        ></app-focus-badge> -->
       </div>
       <div class="item-text">
         <ion-skeleton-text animated></ion-skeleton-text>

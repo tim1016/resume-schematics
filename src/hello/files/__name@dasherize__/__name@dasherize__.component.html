@@ -2,17 +2,18 @@
   *ngLet="{
     addingNew: (service.uiState$ | async) == 'adding',
     uiState: service.uiState$ | async,
-    list: service.<%= camelize(name)%>List$ | async
+    list: service.itemList$ | async,
+    ongoingModification: service.modifications$ | async
   } as obs"
 >
   <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar>
       <ion-title>{{ service.pageTitle.plural }}</ion-title>
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
 
-      <ion-buttons slot="end" *ngIf="obs.uiState == 'display'">
+      <ion-buttons slot="end" *ngIf="obs.uiState == 'default'">
         <ion-button (click)="startAddingNew()" fill="outline">
           <ion-icon slot="icon-only" name="add-outline" fill="clear"></ion-icon>
           <span class="hide-small">Add New</span>
@@ -32,7 +33,7 @@
         <ion-col size="12" size-md="10" offset-md="1" size-xl="8" offset-xl="2">
           <div class="page-item">
             <app-no-item
-              *ngIf="obs.list.length === 0 && obs.uiState == 'display'"
+            *ngIf="obs.list && obs.list.length === 0 && obs.ongoingModification === false"
               [pageTitle]="service.pageTitle"
             ></app-no-item>
           </div>
@@ -44,7 +45,7 @@
           </div>
 
           <div class="page-item">
-            <div *ngIf="obs.uiState != 'adding' && obs.list.length > 0" @enterToDisplay>
+            <div *ngIf="obs.uiState != 'adding' && obs.list && obs.list.length > 0" @enterToDisplay>
               <app-filter-focus (focusFilterEvent)="applyFocusFilter($event)"></app-filter-focus>
 
               <ion-reorder-group (ionItemReorder)="doReorder($event, obs.list)" disabled="false">

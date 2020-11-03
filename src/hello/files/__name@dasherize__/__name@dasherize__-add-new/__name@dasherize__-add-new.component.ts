@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { <%= classify(name)%> } from '../<%= dasherize(name)%>.model';
 import { getSeqNo } from 'src/app/utilities/functions';
-import { Store } from '@ngrx/store';
-import * as from<%= classify(name)%>Actions from '../store/actions';
+import { <%= classify(name)%>Service } from '@app/<%= dasherize(name)%>/<%= dasherize(name)%>.service';
 
 declare type T = <%= classify(name)%>;
 
@@ -14,16 +13,16 @@ declare type T = <%= classify(name)%>;
 export class <%= classify(name)%>AddNewComponent implements OnInit {
   @Input() list: T[];
 
-  constructor(private store: Store) {}
+  constructor(private service: <%= classify(name)%>Service) {}
 
   ngOnInit() {}
 
   onAdd(item: T) {
     const newItem = { ...item, seqNo: getSeqNo(this.list) };
-    this.store.dispatch(from<%= classify(name)%>Actions.createNew({ payload: newItem }));
+    this.service.add(newItem);
   }
 
   onCancelAdd() {
-    this.store.dispatch(from<%= classify(name)%>Actions.cancel({message: 'Item was not created'}));
+    this.service.cancel();
   }
 }

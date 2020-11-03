@@ -1,33 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { tap } from 'rxjs/operators';
 
 import { <%= classify(name)%> } from './<%= dasherize(name)%>.model';
 import { Noun, UIState } from '../utilities/types';
-import { Logger } from '@app/core';
-import { ReadFirestoreDataService } from 'src/app/afmodule/read-firestore-data.service';
 import { CredentialsService } from '@app/auth/credentials.service';
 
 import * as fromUISelectors from 'src/app/store/selectors';
-import * as from<%= classify(name)%>Selectors from './store/selectors';
-import * as from<%= classify(name)%>Actions from './store/actions';
+import * as fromUIActions from '@app/store/UIState.actions';
+import { <%= classify(name)%>EntityService } from '@app/<%= dasherize(name)%>/store/<%= dasherize(name)%>-entity.service';
 
+import { Logger } from '@app/core';
 const log = new Logger('<%= classify(name)%>Service');
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class <%= classify(name)%>Service {
   pageTitle: Noun = {
-    singular: 'ITEMNAME',
-    plural: 'ITEMNAMES',
+    singular: '<%= classify(name)%>',
+    plural: 'Summaries',
   };
   collectionPath: string | null = null;
 
-  <%= dasherize(name)%>List$: Observable<<%= classify(name)%>[]>;
+  itemList$: Observable<<%= classify(name)%>[]>;
   editIndex$: Observable<number>;
-  editItem$: Observable<<%= classify(name)%>>;
   modifications$: Observable<boolean>;
   operationFailed$: Observable<boolean>;
   uiState$: Observable<UIState>;
@@ -35,30 +30,51 @@ export class <%= classify(name)%>Service {
   constructor(
     private store: Store,
     private credentials: CredentialsService,
-    private readFirestoreDataService: ReadFirestoreDataService,
+    private <%= camelize(name)%>EntityService: <%= classify(name)%>EntityService,
   ) {}
-  
+
   initValues() {
-    this.<%= camelize(name)%>List$ = this.store.pipe(select(from<%= classify(name)%>Selectors.<%= camelize(name)%>List)).pipe(
-      tap(list => {
-        log.debug(list);
-        if (list === null || list.length === 0) {
-          this.store.dispatch(from<%= classify(name)%>Actions.startRead());
-        }
-      }),
-    );
-    this.editIndex$ = this.store.pipe(select(from<%= classify(name)%>Selectors.editIndex));
-    this.editItem$ = this.store.pipe(select(from<%= classify(name)%>Selectors.editItem));
-    this.operationFailed$ = this.store.pipe(select(from<%= classify(name)%>Selectors.operationFailed));
+    this.setCollectionPath();
+    this.setActive();
+    this.itemList$ = this.<%= camelize(name)%>EntityService.entities$;
+    this.editIndex$ = this.store.pipe(select(fromUISelectors.editIndex));
     this.modifications$ = this.store.pipe(select(fromUISelectors.modifications));
     this.uiState$ = this.store.pipe(select(fromUISelectors.uiState));
   }
 
-  get list$() {
-    return this.readFirestoreDataService.getListWithFocus<<%= classify(name)%>>(this.collectionPath);
+  setCollectionPath() {
+    this.collectionPath = this.credentials.collectionPath('<%= dasherize(name)%>');
   }
 
-  setCollectionPath() {
-    this.collectionPath = this.credentials.collectionPath(this.pageTitle.singular.toLowerCase());
+  delete(id: string): void {
+    this.<%= camelize(name)%>EntityService.delete(id);
+  }
+
+  update(item: <%= classify(name)%>, id: string) {
+    this.<%= camelize(name)%>EntityService.update({ ...item, id });
+  }
+
+  add(item: <%= classify(name)%>) {
+    this.<%= camelize(name)%>EntityService.add(item);
+  }
+
+  setActive() {
+    this.store.dispatch(fromUIActions.setActiveItem({ activeItem: this.pageTitle.singular }));
+  }
+
+  setUItoUpdating(index: number) {
+    this.store.dispatch(fromUIActions.setUItoUpdating({ index }));
+  }
+
+  cancel() {
+    this.store.dispatch(fromUIActions.cancel());
+  }
+
+  setUItoDeleting() {
+    this.store.dispatch(fromUIActions.setUItoDeleting());
+  }
+
+  setUItoAdding() {
+    this.store.dispatch(fromUIActions.setUItoAdding());
   }
 }
