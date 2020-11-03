@@ -60,6 +60,6 @@ export class <%= classify(name)%>Module {
     private <%= camelize(name)%>DataService: <%= classify(name)%>DataService,
   ) {
     eds.registerMetadataMap(entityMetadata);
-    entityDataService.registerService('<%= classify(name)%>', <%= dasherize(name)%>DataService);
+    entityDataService.registerService('<%= classify(name)%>', <%= camelize(name)%>DataService);
   }
 }
